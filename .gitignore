@@ -1,0 +1,13 @@
+# 環境変数ファイル
+.env
+
+# Firebase認証キーファイル
+*.json
+
+# Pythonのキャッシュなど
+venv/
+__pycache__/
+*.pyc
+
+# macOSのシステムファイル
+.DS_Store

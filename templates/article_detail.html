@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ article.generatedTitle }} - Tech Log</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+            margin: 0; 
+            background-color: #fff; 
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background-color: #4a6077; 
+            padding: 1em 2em; 
+            border-bottom: 1px solid #dee2e6; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        header h1 {
+            margin: 0; 
+            font-size: 1.5em; 
+            color: #ffffff; 
+        }
+        header h1 a {
+            color: #ffffff; 
+            text-decoration: none; 
+        }
+        /* パンくずリスト */
+        .breadcrumbs {
+            padding: 12px 2em;
+            flex-shrink: 0;
+            font-size: 0.9em;
+        }
+        .breadcrumbs ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+        .breadcrumbs li::after {
+            content: '>';
+            margin: 0 0.6em;
+            color: #000000;
+        }
+        .breadcrumbs li:last-child::after {
+            content: '';
+        }
+        .breadcrumbs a {
+            text-decoration: none;
+            color: #000000;
+        }
+        .breadcrumbs a:hover {
+            text-decoration: underline;
+        }
+        .breadcrumbs li:last-child {
+            color: #000000;
+            font-weight: 500;
+        }
+        .user-info {
+            font-size: 0.9em; 
+            color: #ffffff; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        #logout-btn:hover {
+            fill: #bdbdbd; 
+        }
+        .container {
+            max-width: 800px; 
+            margin: 2em auto; 
+            padding: 2em; /* コンテナの内側の余白を元に戻します */
+            background-color: #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            /* overflow: hidden は不要なので削除します */
+        }
+        .article-title {
+            margin-top: 0; 
+            font-size: 2em; 
+        }
+        .source {
+            color: #6c757d; 
+            font-style: italic; 
+            margin-bottom: 2em; 
+            /* border-bottom: 1px solid #eee;  */
+            padding-bottom: 1em; 
+        }
+        .source a {
+            color: #007bff; 
+        }
+        .summary {
+            color: #212529; 
+            line-height: 1.7; 
+        }
+        .back-link {
+            display: block; 
+            /* margin-top: 2em;  */
+            margin-bottom: 1em;
+            color: #000000; 
+            text-decoration: none; 
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        .back-link:hover {
+            text-decoration: underline; 
+        }
+        .form-group {
+            margin-bottom: 1.5em; 
+        }
+        .form-group label {
+            display: block; 
+            font-weight: bold; 
+            margin-bottom: 0.5em; 
+        }
+        .form-group textarea {
+            width: 100%; 
+            padding: 0.5em; 
+            font-size: 1em; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            min-height: 100px; 
+            resize: vertical; 
+        }
+        .form-group textarea:disabled {
+            background-color: #e9ecef; 
+            border-color: #dee2e6; 
+            color: #495057; 
+            cursor: not-allowed; 
+            opacity: 1; 
+        }
+        .tag-select-group {
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+        }
+        .tag-select-group input[type="radio"] {
+            display: none; 
+        }
+        .tag-select-group label {
+            display: none; 
+            background-color: #e9ecef; 
+            color: #495057; 
+            padding: 0.6em 1em; 
+            border-radius: 15px; 
+            font-size: 0.9em; 
+            cursor: pointer; 
+            transition: all 0.2s ease-in-out; 
+            border: 1px solid #e9ecef; 
+        }
+        #reflection-form.is-editing .tag-select-group label {
+            display: inline-block; 
+        }
+        .tag-select-group input[type="radio"]:checked + label {
+            display: inline-block; 
+            background-color: #007bff; 
+            color: white; 
+            border-color: #0056b3; 
+            font-weight: bold; 
+        }
+        #reflection-form:not(.is-editing) .tag-select-group label {
+            cursor: default; 
+        }
+        #reflection-form.is-editing .tag-select-group input[type="radio"]:not(:checked) + label:hover {
+            background-color: #d3dce3; 
+            border-color: #b6c3d0; 
+        }
+        .tag-select-group input[type="radio"]:disabled:checked + label {
+            background-color: #5D6D7E; 
+            color: white; 
+            opacity: 0.8; 
+            border-color: #5D6D7E; 
+        }
+        .placeholder-tag {
+            display: inline-block; 
+            background-color: transparent; 
+            color: #6c757d; 
+            padding: 0.6em 1em; 
+            border-radius: 15px; 
+            font-size: 0.9em; 
+            border: 1px dashed #ced4da; 
+        }
+        .tag-select-group input[type="radio"]:checked ~ .placeholder-tag, #reflection-form.is-editing .placeholder-tag {
+            display: none; 
+        }
+        .button-group {
+            margin-top: 1em; 
+        }
+        .button-group button {
+            padding: 8px 16px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            border: 1px solid transparent; 
+        }
+        #save-reflection-btn {
+            background-color: #007bff; 
+            color: white; 
+        }
+        #cancel-edit-btn {
+            background-color: #6c757d; 
+            color: white; 
+        }
+        .detail-image {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 1.5em;
+        }
+        .article-title {
+            margin-top: 0;
+            font-size: 2em; 
+        }
+        .tags {
+            margin-top: 0; /* 親要素でマージンを管理するためリセット */
+        }
+        .tags span {
+            display: inline-block; 
+            background-color: #e9ecef; 
+            color: #495057; 
+            padding: 0.3em 0.7em; 
+            border-radius: 12px; 
+            margin-right: 0.5em; 
+            margin-bottom: 0.5em; 
+            font-size: 0.9em; 
+        }
+        /* 新しく追加する親コンテナのスタイル */
+        .tags-actions-container {
+            display: flex; /* Flexboxを有効化 */
+            justify-content: space-between; /* 両端に要素を配置 */
+            align-items: center; /* 要素を垂直方向の中央に揃える */
+            margin-top: 2em; /* 上のコンテンツとの余白 */
+        }
+        .delete-btn {
+            background-color:  #e9ecef;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex; /* アイコンを中央に配置するために追加 */
+            align-items: center;
+        }
+        .delete-btn:hover {
+            background: #ededed;
+        }
+        .read-later-btn {
+            background-color: #e9ecef;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .read-later-btn:hover { background: #dadada; }
+        .read-later-btn.active { background-color: #ffc107; }
+        .read-later-btn.active:hover { background-color: #e0a800; }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            <a href="{{ url_for('dashboard') }}">Tech Log</a>
+        </h1>
+        <div class="user-info">
+            <span>ログイン中: <strong>{{ user_email }}</strong>
+            </span>
+            <svg id="logout-btn" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
+        </div>
+    </header>
+    <div class="breadcrumbs">
+        <ul>
+          <li><a href="{{ url_for('select_view') }}">TOP</a></li>
+          <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+          <li>{{ article.generatedTitle | truncate(30) }}</li>
+        </ul>
+    </div>
+    <div class="container">
+        <a href="{{ url_for('dashboard') }}" class="back-link">＜</a>
+        {% if article.ogp and article.ogp.image %}
+            <img class="detail-image" 
+                src="{{ article.ogp.image }}" 
+                alt="{{ article.generatedTitle }}" 
+                onerror="this.onerror=null;this.src='https://placehold.co/600x400/e9ecef/495057?text=No+Image';">
+        {% else %}
+            <img class="detail-image" 
+                src="https://placehold.co/600x400/e9ecef/495057?text=No+Image" 
+                alt="No Image Available">
+        {% endif %}
+        
+        <h2 class="article-title">{{ article.generatedTitle }}</h2>
+        <p class="source">情報元: {{ article.source }} | <a href="{{ article.originalUrl }}" target="_blank" rel="noopener noreferrer">元の記事を読む</a></p>
+        <p class="summary">{{ article.summary }}</p>
+        <div class="tags-actions-container">
+            <div class="tags">
+            </div>
+    
+            <div class="action-buttons">
+                <button class="read-later-btn {% if article.readLater %}active{% endif %}" data-article-id="{{ article.id }}" title="後で見る">
+                    <svg width="20" height="20" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 0C9 0 0 9 0 20C0 31 9 40 20 40C31 40 40 31 40 20C40 9 31 0 20 0ZM20 36C11.18 36 4 28.82 4 20C4 11.18 11.18 4 20 4C28.82 4 36 11.18 36 20C36 28.82 28.82 36 20 36ZM21 10H18V22L28.4 28.4L30 25.8L21 20.4V10Z" fill="black"/>
+                    </svg>
+                </button>
+                <button class="delete-btn" data-article-id="{{ article.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="20px" height="20px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>
+                </button>
+            </div>
+        </div>
+        <hr style="margin: 2em 0;">
+        <div class="reflection-section">
+            <h2>この記事からの学び・振り返り</h2>
+            <form id="reflection-form">
+                <div class="form-group">
+                    <label>役に立ったか（ティア）</label>
+                    <div class="tag-select-group">
+                        <input type="radio" id="u-s" name="usefulness" value="tier-s" {% if article.reflection and article.reflection.usefulness == "tier-s" %}checked{% endif %} disabled><label for="u-s">S (殿堂入り)</label>
+                        <input type="radio" id="u-a" name="usefulness" value="tier-a" {% if article.reflection and article.reflection.usefulness == "tier-a" %}checked{% endif %} disabled><label for="u-a">A (非常に役立った)</label>
+                        <input type="radio" id="u-b" name="usefulness" value="tier-b" {% if article.reflection and article.reflection.usefulness == "tier-b" %}checked{% endif %} disabled><label for="u-b">B (役立った)</label>
+                        <input type="radio" id="u-c" name="usefulness" value="tier-c" {% if article.reflection and article.reflection.usefulness == "tier-c" %}checked{% endif %} disabled><label for="u-c">C (普通)</label>
+                        <input type="radio" id="u-d" name="usefulness" value="tier-d" {% if article.reflection and article.reflection.usefulness == "tier-d" %}checked{% endif %} disabled><label for="u-d">D (あまり役立たなかった)</label>
+                        <span class="placeholder-tag">未選択</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>サイトを見た印象</label>
+                    <div class="tag-select-group">
+                        <input type="radio" id="i-interesting" name="impression" value="impression-interesting" {% if article.reflection and article.reflection.impression == "impression-interesting" %}checked{% endif %} disabled><label for="i-interesting">興味深い</label>
+                        <input type="radio" id="i-useful" name="impression" value="impression-useful" {% if article.reflection and article.reflection.impression == "impression-useful" %}checked{% endif %} disabled><label for="i-useful">使えそう</label>
+                        <input type="radio" id="i-old" name="impression" value="impression-old" {% if article.reflection and article.reflection.impression == "impression-old" %}checked{% endif %} disabled><label for="old">情報が古い</label>
+                        <input type="radio" id="i-boring" name="impression" value="impression-boring" {% if article.reflection and article.reflection.impression == "impression-boring" %}checked{% endif %} disabled><label for="i-boring">つまらない</label>
+                        <span class="placeholder-tag">未選択</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>サイトのコンテンツ</label>
+                    <div class="tag-select-group">
+                        <input type="radio" id="c-tutorial" name="content_type" value="content-tutorial" {% if article.reflection and article.reflection.content_type == "content-tutorial" %}checked{% endif %} disabled><label for="c-tutorial">チュートリアル</label>
+                        <input type="radio" id="c-reference" name="content_type" value="content-reference" {% if article.reflection and article.reflection.content_type == "content-reference" %}checked{% endif %} disabled><label for="c-reference">リファレンス</label>
+                        <input type="radio" id="c-techblog" name="content_type" value="content-techblog" {% if article.reflection and article.reflection.content_type == "content-techblog" %}checked{% endif %} disabled><label for="c-techblog">技術ブログ</label>
+                        <input type="radio" id="c-news" name="content_type" value="content-news" {% if article.reflection and article.reflection.content_type == "content-news" %}checked{% endif %} disabled><label for="c-news">ニュース記事</label>
+                        <input type="radio" id="c-personal" name="content_type" value="content-personal" {% if article.reflection and article.reflection.content_type == "content-personal" %}checked{% endif %} disabled><label for="c-personal">個人ブログ</label>
+                        <input type="radio" id="c-other" name="content_type" value="content-other" {% if article.reflection and article.reflection.content_type == "content-other" %}checked{% endif %} disabled><label for="c-other">その他</label>
+                        <span class="placeholder-tag">未選択</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="specific_impression">具体的な印象</label><textarea id="specific_impression" name="specific_impression" disabled>{% if article.reflection and article.reflection is mapping %}{{ article.reflection.specific_impression or '' }}{% endif %}</textarea></div>
+                <div class="form-group"><label for="why_important">なぜこの情報が重要だと感じたのか</label><textarea id="why_important" name="why_important" disabled>{% if article.reflection and article.reflection is mapping %}{{ article.reflection.why_important or '' }}{% endif %}</textarea></div>
+                <div class="form-group"><label for="what_i_got">何を得ることができたか</label><textarea id="what_i_got" name="what_i_got" disabled>{% if article.reflection and article.reflection is mapping %}{{ article.reflection.what_i_got or '' }}{% endif %}</textarea></div>
+                <div class="form-group"><label for="memo">メモ</label><textarea id="memo" name="memo" disabled>{% if article.reflection and article.reflection is mapping %}{{ article.reflection.memo or '' }}{% endif %}</textarea></div>
+                <div class="button-group">
+                    {% if article.reflection %}<button type="button" id="edit-reflection-btn">振り返りを編集する</button>{% else %}<button type="button" id="edit-reflection-btn">振り返りを入力する</button>{% endif %}
+                    <button type="submit" id="save-reflection-btn" style="display:none;">保存する</button>
+                    <button type="button" id="cancel-edit-btn" style="display:none;">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA", 
+            authDomain: "tech-log-1cbba.firebaseapp.com", 
+            projectId: "tech-log-1cbba", 
+            storageBucket: "tech-log-1cbba.firebasestorage.app", 
+            messagingSenderId: "24893956064", 
+            appId: "1:24893956064:web:71b8170b7335bee6685585" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- ログアウト処理 ---
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    auth.signOut().then(() => {
+                        document.cookie = 'firebaseToken=; path=/; max-age=0';
+                        window.location.href = '/login';
+                    });
+                });
+            }
+    
+            // --- 振り返りフォームの編集・保存処理 ---
+            const editForm = document.getElementById('reflection-form');
+            const editBtn = document.getElementById('edit-reflection-btn');
+            const saveBtn = document.getElementById('save-reflection-btn');
+            const cancelBtn = document.getElementById('cancel-edit-btn');
+            const formFields = editForm.querySelectorAll('input[type="radio"], textarea');
+    
+            if (editBtn) {
+                editBtn.addEventListener('click', () => {
+                    formFields.forEach(field => field.disabled = false);
+                    editForm.classList.add('is-editing');
+                    editBtn.style.display = 'none';
+                    saveBtn.style.display = 'inline-block';
+                    cancelBtn.style.display = 'inline-block';
+                });
+            }
+    
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    window.location.reload();
+                });
+            }
+    
+            if (editForm) {
+                editForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const getRadioValue = (name) => {const selectedRadio = document.querySelector(`input[name="${name}"]:checked`); return selectedRadio ? selectedRadio.value : ""; };
+                    const reflectionData = { usefulness: getRadioValue('usefulness'), impression: getRadioValue('impression'), content_type: getRadioValue('content_type'), specific_impression: document.getElementById('specific_impression').value, why_important: document.getElementById('why_important').value, what_i_got: document.getElementById('what_i_got').value, memo: document.getElementById('memo').value, };
+                    const articleId = window.location.pathname.split('/').pop();
+                    
+                    saveBtn.disabled = true;
+                    saveBtn.textContent = '保存中...';
+                    
+                    auth.currentUser.getIdToken().then((token) => {
+                        fetch(`/article/${articleId}/reflection`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(reflectionData) })
+                        .then(response => { if (!response.ok) throw new Error('Save failed'); alert('保存しました。'); window.location.reload(); })
+                        .catch(error => { console.error('Error:', error); alert('保存に失敗しました。'); saveBtn.disabled = false; saveBtn.textContent = '保存する'; });
+                    });
+                });
+            }
+            
+            // --- 削除ボタンの処理 ---
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    // aタグのページ遷移をキャンセル
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    const articleId = button.dataset.articleId;
+                    if (confirm('この記事を本当に削除しますか？\nこの操作は元に戻せません。')) {
+                        auth.currentUser.getIdToken().then(token => {
+                            fetch(`/article/${articleId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': 'Bearer ' + token
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('記事を削除しました。');
+                                    window.location.href = '/dashboard';
+                                } else {
+                                    throw new Error('削除に失敗しました。');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert(error.message);
+                            });
+                        });
+                    }
+                });
+            });
+            const readLaterButton = document.querySelector('.read-later-btn');
+            if (readLaterButton) {
+                readLaterButton.addEventListener('click', (event) => {
+                    const articleId = readLaterButton.dataset.articleId;
+                    auth.currentUser.getIdToken().then(token => {
+                        fetch(`/api/article/${articleId}/read_later`, {
+                            method: 'POST',
+                            headers: { 'Authorization': 'Bearer ' + token }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                readLaterButton.classList.toggle('active', data.readLater);
+                            } else {
+                                throw new Error('状態の更新に失敗しました。');
+                            }
+                        })
+                        .catch(error => { console.error('Error:', error); alert(error.message); });
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

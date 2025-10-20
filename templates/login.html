@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>Tech Log - 閲覧した技術記事を自動で記録・要約</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40vh;
+            margin: 0;
+            background-color: #ffffff;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #343a40;
+            margin-bottom: 1em;
+
+        }
+        p {
+            font-size: 1.1em;
+            color: #6c757d;
+            margin-bottom: 2em;
+        }
+        .button-group {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+        }
+        .btn {
+            text-decoration: none;
+            font-size: 1em;
+            padding: 12px 36px;
+            border-radius: 50px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-primary {
+            background-color: #1b94ff;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: rgb(38, 110, 187);
+        }
+        .btn-secondary {
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            color: rgb(0, 0, 0);
+        }
+        .btn-secondary:hover {
+            background-color: #dbdbdb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tech Log</h1>
+        <p>あなたが閲覧したIT技術に関連するサイトを、忘れないように振り返りをしよう！</p>
+        <div class="button-group">
+            <button id="login-btn" class="btn btn-primary">ログイン</button>
+            <button id="signup-btn" class="btn btn-secondary">新規登録</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA",
+            authDomain: "tech-log-1cbba.firebaseapp.com",
+            projectId: "tech-log-1cbba",
+            storageBucket: "tech-log-1cbba.firebasestorage.app",
+            messagingSenderId: "24893956064",
+            appId: "1:24893956064:web:71b8170b7335bee6685585"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        function handleGoogleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    return user.getIdToken();
+                })
+                .then((idToken) => {
+                    // Cookieの有効期限を1時間に設定
+                    document.cookie = `firebaseToken=${idToken}; path=/; max-age=3600`;
+                    // ログイン後はダッシュボードに遷移
+                    window.location.href = '/select';
+                })
+                .catch((error) => {
+                    console.error('Googleログインエラー:', error);
+                    alert('Googleログインに失敗しました: ' + error.message);
+                });
+        }
+
+        document.getElementById('login-btn').addEventListener('click', handleGoogleLogin);
+        document.getElementById('signup-btn').addEventListener('click', handleGoogleLogin);
+    </script>
+</body>
+</html>
