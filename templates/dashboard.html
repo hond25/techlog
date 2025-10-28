@@ -80,21 +80,32 @@
             margin: 1.5em auto;
             padding: 0 1.5em;
             display: block;
+            position: relative; /* Absolute positioning reference */
+            padding-top: 4em;   /* Space for the button */
         }
 
         .update-button-container {
-            text-align: right;
-            margin-bottom: 1.5em;
-            grid-column: 1 / -1;
+            position: absolute; /* Position relative to .container */
+            top: 5em;         /* Adjust top position */
+            right: 1.5em;       /* Align to the right padding of container */
+            margin-bottom: 0;
+            z-index: 10;        /* Keep button above other elements */
         }
 
         .recommendation-section {
             margin-bottom: 3em;
+            /* position: relative; Removed */
+            /* padding-top: 3.5em; Removed */
         }
 
         .section-header {
-            align-items: center;
-            margin-bottom: 1em;
+            display: flex; /* Keep title and (potential future elements) aligned */
+            justify-content: space-between; /* Align items at ends */
+            align-items: baseline; /* Align text baselines */
+            margin-bottom: 1em; /* Space below the header */
+            /* position: absolute; Removed */
+            /* top: 0; Removed */
+            /* left: 1.5em; Removed */
         }
         .section-header .section-title {
              margin-bottom: 0;
@@ -103,6 +114,11 @@
         }
         .recommendation-section .section-header .section-title {
              color: #c88f04;
+        }
+
+        /* Adjust margin for the grid inside recommendation section if needed */
+        .recommendation-section .article-grid {
+            margin-top: 0;
         }
 
         #update-recommendations-btn {
@@ -131,6 +147,7 @@
             fill: #343a40;
         }
 
+        /* General style for section titles (like "すべての技術記事") */
         h2.section-title {
              margin-bottom: 1em;
              border-bottom: 2px solid #e9ecef;
@@ -261,9 +278,8 @@
             background-color: #9575cd;
         }
 
+        /* Specific styles for recommended articles */
         .recommendation-section .article {
-            background-color: #fffbeb;
-            border-left: 4px solid #ffc107;
             position: relative;
         }
 
@@ -309,18 +325,33 @@
              fill: #333;
         }
 
-
-        @media (max-width: 992px) { .article-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .article-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 768px) {
             .article-grid { grid-template-columns: 1fr; }
+            .container {
+                padding-top: 5em; /* Adjust top padding for button on mobile */
+                margin-top: 0;
+                padding-left: 1em; /* Reduce side padding on mobile */
+                padding-right: 1em;
+            }
             .update-button-container {
-                 margin-bottom: 1em;
+                 top: 1em; /* Adjust button position on mobile */
+                 right: 1em;
             }
             .section-header {
-                margin-bottom: 0.8em;
+                flex-direction: column; /* Stack title and (potential) button on mobile */
+                align-items: flex-start;
+                gap: 0.8em;
             }
-            #update-recommendations-btn {
-                 /* No align-self needed here as it's in its own container */
+             /* Since button is positioned absolutely, no need to reset align-self here */
+            .breadcrumbs {
+                padding: 12px 1em; /* Reduce breadcrumb padding on mobile */
+            }
+            header {
+                padding: 0.8em 1em; /* Reduce header padding on mobile */
             }
         }
     </style>
@@ -347,18 +378,18 @@
     </div>
 
     <div class="container">
-        <div class="update-button-container">
-            <button id="update-recommendations-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#5f6368"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690l-57 57q-38-20-83-30t-90-10q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h-106v-80h180q0 15-2.5 41t-11.5 59q-63 118-181.5 186T480-160Zm112-192L480-464v-216h80v184l104 104-52 52Z"/></svg>
-                おすすめを今すぐ更新
-            </button>
-        </div>
+        
 
-        {% if recommended_articles %}
         <div class="recommendation-section">
             <div class="section-header">
                 <h2 class="section-title">★ あなたへのおすすめ</h2>
             </div>
+            <div class="update-button-container">
+                <button id="update-recommendations-btn">
+                    おすすめを今すぐ更新
+                </button>
+            </div>
+            {% if recommended_articles %}
             <div class="article-grid">
                 {% for article in recommended_articles %}
                     <a href="{{ url_for('article_detail', article_id=article.id) }}" class="article">
