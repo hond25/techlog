@@ -435,7 +435,14 @@
     </div>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA", authDomain: "tech-log-1cbba.firebaseapp.com", projectId: "tech-log-1cbba", storageBucket: "tech-log-1cbba.firebasestorage.app", messagingSenderId: "24893956064", appId: "1:24893956064:web:71b8170b7335bee6685585" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA", 
+            authDomain: "tech-log-1cbba.firebaseapp.com", 
+            projectId: "tech-log-1cbba", 
+            storageBucket: "tech-log-1cbba.firebasestorage.app", 
+            messagingSenderId: "24893956064", 
+            appId: "1:24893956064:web:71b8170b7335bee6685585" 
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         document.getElementById('logout-btn').addEventListener('click', () => { auth.signOut().then(() => { document.cookie = 'firebaseToken=; path=/; max-age=0'; window.location.href = '/'; }); });
