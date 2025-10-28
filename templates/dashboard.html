@@ -82,23 +82,25 @@
             display: block;
         }
 
+        .update-button-container {
+            text-align: right;
+            margin-bottom: 1.5em;
+            grid-column: 1 / -1;
+        }
+
         .recommendation-section {
             margin-bottom: 3em;
         }
 
         .section-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-bottom: 1em;
         }
-
         .section-header .section-title {
-            margin-bottom: 0;
-            border-bottom: none;
-            padding-bottom: 0;
+             margin-bottom: 0;
+             border-bottom: none;
+             padding-bottom: 0;
         }
-
         .recommendation-section .section-header .section-title {
              color: #c88f04;
         }
@@ -129,17 +131,14 @@
             fill: #343a40;
         }
 
-        /* Styles for the section title NOT inside a section-header */
-        .article-grid + h2.section-title,
-        .recommendation-section + h2.section-title {
+        h2.section-title {
              margin-bottom: 1em;
              border-bottom: 2px solid #e9ecef;
              padding-bottom: 0.5em;
-             display: block; /* Ensure it takes full width */
-             font-size: 1.5em; /* Ensure consistent font size */
-             color: #343a40; /* Ensure consistent color */
+             display: block;
+             font-size: 1.5em;
+             color: #343a40;
         }
-
 
         .article-grid {
             display: grid;
@@ -263,6 +262,8 @@
         }
 
         .recommendation-section .article {
+            background-color: #fffbeb;
+            border-left: 4px solid #ffc107;
             position: relative;
         }
 
@@ -312,13 +313,14 @@
         @media (max-width: 992px) { .article-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) {
             .article-grid { grid-template-columns: 1fr; }
+            .update-button-container {
+                 margin-bottom: 1em;
+            }
             .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.8em;
+                margin-bottom: 0.8em;
             }
             #update-recommendations-btn {
-                 align-self: flex-end;
+                 /* No align-self needed here as it's in its own container */
             }
         }
     </style>
@@ -345,13 +347,17 @@
     </div>
 
     <div class="container">
+        <div class="update-button-container">
+            <button id="update-recommendations-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#5f6368"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690l-57 57q-38-20-83-30t-90-10q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h-106v-80h180q0 15-2.5 41t-11.5 59q-63 118-181.5 186T480-160Zm112-192L480-464v-216h80v184l104 104-52 52Z"/></svg>
+                おすすめを今すぐ更新
+            </button>
+        </div>
+
         {% if recommended_articles %}
         <div class="recommendation-section">
             <div class="section-header">
                 <h2 class="section-title">★ あなたへのおすすめ</h2>
-                <button id="update-recommendations-btn">
-                    おすすめを今すぐ更新
-                </button>
             </div>
             <div class="article-grid">
                 {% for article in recommended_articles %}
@@ -435,14 +441,7 @@
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA", 
-            authDomain: "tech-log-1cbba.firebaseapp.com", 
-            projectId: "tech-log-1cbba", 
-            storageBucket: "tech-log-1cbba.firebasestorage.app", 
-            messagingSenderId: "24893956064", 
-            appId: "1:24893956064:web:71b8170b7335bee6685585" 
-        };
+        const firebaseConfig = { apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA", authDomain: "tech-log-1cbba.firebaseapp.com", projectId: "tech-log-1cbba", storageBucket: "tech-log-1cbba.firebasestorage.app", messagingSenderId: "24893956064", appId: "1:24893956064:web:71b8170b7335bee6685585" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         document.getElementById('logout-btn').addEventListener('click', () => { auth.signOut().then(() => { document.cookie = 'firebaseToken=; path=/; max-age=0'; window.location.href = '/'; }); });
