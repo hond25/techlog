@@ -8,73 +8,77 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-            margin: 0; 
-            background-color: #f8f9fa; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            background-color: #f8f9fa;
         }
         header {
-            background-color: #4a6077; 
-            padding: 1em 2em; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+            background-color: #4a6077;
+            padding: 1em 2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         header h1 {
-            margin: 0; 
-            font-size: 1.5em; 
-            color: #ffffff; 
+            margin: 0;
+            font-size: 1.5em;
+            color: #ffffff;
         }
         header h1 a {
-            color: #ffffff; 
-            text-decoration: none; 
+            color: #ffffff;
+            text-decoration: none;
         }
         .user-info {
-            font-size: 0.9em; 
-            color: #ffffff; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
+            font-size: 0.9em;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #logout-btn {
+             fill: #FFFFFF;
+             cursor: pointer;
         }
         #logout-btn:hover {
-            fill: #bdbdbd; 
+            fill: #bdbdbd;
         }
         .breadcrumbs {
-            padding: 12px 2em; 
-            background-color: #fff; 
-            border-bottom: 1px solid #dee2e6; 
-            font-size: 0.9em; 
+            padding: 12px 2em;
+            background-color: #fff;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 0.9em;
         }
         .breadcrumbs ul {
-            display: flex; 
-            list-style: none; 
-            margin: 0; 
-            padding: 0; 
-            align-items: center; 
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            align-items: center;
         }
         .breadcrumbs li::after {
-            content: '>'; 
-            margin: 0 0.6em; 
-            color: #6c757d; 
+            content: '>';
+            margin: 0 0.6em;
+            color: #6c757d;
         }
         .breadcrumbs li:last-child::after {
-            content: ''; 
+            content: '';
         }
         .breadcrumbs a {
-            text-decoration: none; 
-            color: #000000; 
+            text-decoration: none;
+            color: #000000;
         }
         .breadcrumbs a:hover {
-            text-decoration: underline; 
+            text-decoration: underline;
         }
         .breadcrumbs li:last-child {
-            color: #343a40; 
-            font-weight: 500; 
+            color: #343a40;
+            font-weight: 500;
         }
 
         .container {
-            max-width: 1200px; 
-            margin: 1.5em auto; 
-            padding: 0 1.5em; 
+            max-width: 1200px;
+            margin: 1.5em auto;
+            padding: 0 1.5em;
             display: block;
         }
 
@@ -82,13 +86,60 @@
             margin-bottom: 3em;
         }
 
-        .section-title {
-            font-size: 1.5em;
-            color: #343a40;
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1em;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 0.5em;
         }
+
+        .section-header .section-title {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .recommendation-section .section-header .section-title {
+             color: #c88f04;
+        }
+
+        #update-recommendations-btn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #343a40;
+            flex-shrink: 0;
+        }
+        #update-recommendations-btn:hover {
+            background-color: #d4dae0;
+        }
+        #update-recommendations-btn:disabled {
+            background-color: #f8f9fa;
+            cursor: wait;
+            opacity: 0.7;
+        }
+        #update-recommendations-btn svg {
+            fill: #343a40;
+        }
+
+        /* Styles for the section title NOT inside a section-header */
+        .article-grid + h2.section-title,
+        .recommendation-section + h2.section-title {
+             margin-bottom: 1em;
+             border-bottom: 2px solid #e9ecef;
+             padding-bottom: 0.5em;
+             display: block; /* Ensure it takes full width */
+             font-size: 1.5em; /* Ensure consistent font size */
+             color: #343a40; /* Ensure consistent color */
+        }
+
 
         .article-grid {
             display: grid;
@@ -96,128 +147,139 @@
             gap: 1.5em;
         }
 
-        /* .article:has(.tier-s) { border-left: 5px solid #ff6f61; }
-        .article:has(.tier-a) { border-left: 5px solid #ffb74d; }
-        .article:has(.tier-b) { border-left: 5px solid #4db6ac; } */
-        
         .article {
-            background-color: #fff; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            transition: box-shadow 0.2s; 
-            text-decoration: none; 
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+            text-decoration: none;
         }
         .article:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .article-image {
-            width: 100%; 
-            height: 160px; 
-            object-fit: cover; 
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
         }
         .article-content {
-            padding: 1.2em; 
-            display: flex; 
-            flex-direction: column; 
-            flex-grow: 1; 
+            padding: 1.2em;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
         .article-content h3 {
-            margin-top: 0; 
-            font-size: 1em; 
-            line-height: 1.4; 
-            flex-grow: 1; 
-            color: #333; 
+            margin-top: 0;
+            font-size: 1em;
+            line-height: 1.4;
+            flex-grow: 1;
+            color: #333;
         }
         .article-footer {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-top: auto; 
-            padding-top: 0.8em; 
-
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 0.8em;
         }
         .tags {
-            margin-top: 0; 
-            padding-top: 0; 
-            flex-grow: 1; 
+            margin-top: 0;
+            padding-top: 0;
+            flex-grow: 1;
             display: flex;
             flex-wrap: wrap;
         }
         .delete-btn {
-            background-color: #e9ecef; 
-            color: white; 
-            border: none; 
-            padding: 5px 10px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 0.8em; 
-            flex-shrink: 0; 
-            transition: background-color 0.2s; 
+            background-color: #e9ecef;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            flex-shrink: 0;
+            transition: background-color 0.2s;
         }
         .delete-btn:hover {
-            background: #dadada; 
+            background: #dadada;
         }
         .article-date {
-            font-size: 0.8em; 
-            color: #6c757d; 
-            margin-bottom: 0.6em; 
-            margin-top: 0; 
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-bottom: 0.6em;
+            margin-top: 0;
         }
         .tags span {
-            display: inline-block; 
-            background-color: #e9ecef; 
-            color: #495057; 
-            padding: 0.4em 0.8em; 
-            border-radius: 12px; 
-            font-size: 0.75em; 
-            margin-right: 6px; 
-            margin-bottom: 6px; 
+            display: inline-block;
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 0.4em 0.8em;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin-right: 6px;
+            margin-bottom: 6px;
         }
         .no-articles {
-            grid-column: 1 / -1; 
-            text-align: center; 
-            color: #6c757d; 
-            padding: 3em; 
-            background-color: #fff; 
-            border-radius: 8px; 
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #6c757d;
+            padding: 3em;
+            background-color: #fff;
+            border-radius: 8px;
         }
-        .article-actions { /* ボタンをまとめるコンテナ */
+        .article-actions {
             display: flex;
             flex-shrink: 0;
         }
         .tier-badge {
-            padding: 6px 10px; 
-            font-size: 0.75em; 
-            font-weight: bold; 
-            color: white; 
-            border-radius: 5px; 
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.2); 
-            flex-shrink: 0; 
-            margin-bottom: 0.8em; 
-            align-self: flex-start; 
+            padding: 6px 10px;
+            font-size: 0.75em;
+            font-weight: bold;
+            color: white;
+            border-radius: 5px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+            margin-bottom: 0.8em;
+            align-self: flex-start;
         }
         .tier-s {
-            background-color: #ff6f61; 
+            background-color: #ff6f61;
         }
         .tier-a {
-            background-color: #ffb74d; 
+            background-color: #ffb74d;
         }
         .tier-b {
-            background-color: #4db6ac; 
+            background-color: #4db6ac;
         }
         .tier-c {
-            background-color: #64b5f6; 
+            background-color: #64b5f6;
         }
         .tier-d {
-            background-color: #9575cd; 
+            background-color: #9575cd;
         }
 
-        @media (max-width: 992px) { .article-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 768px) { .article-grid { grid-template-columns: 1fr; } }
+        .recommendation-section .article {
+            position: relative;
+        }
+
+        .recommendation-section .article::before {
+            content: "★";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 193, 7, 0.9);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            z-index: 10;
+            line-height: 1;
+        }
 
         .read-later-btn {
             background-color: #e9ecef;
@@ -228,17 +290,36 @@
             transition: background-color 0.2s;
             display: flex;
             align-items: center;
-            margin-right: 8px; /* 削除ボタンとの間に余白 */
+            margin-right: 8px;
         }
         .read-later-btn:hover {
             background: #dadada;
         }
-        /* 「後で見る」がオンの時のスタイル */
         .read-later-btn.active {
-            background-color: #ffc107; /* 黄色 */
+            background-color: #ffc107;
         }
         .read-later-btn.active:hover {
             background-color: #e0a800;
+        }
+        .read-later-btn svg {
+             fill: #343a40;
+        }
+        .read-later-btn.active svg {
+             fill: #333;
+        }
+
+
+        @media (max-width: 992px) { .article-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) {
+            .article-grid { grid-template-columns: 1fr; }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8em;
+            }
+            #update-recommendations-btn {
+                 align-self: flex-end;
+            }
         }
     </style>
 </head>
@@ -247,7 +328,7 @@
         <h1><a href="{{ url_for('select_view') }}">Tech Log</a></h1>
         <div class="user-info">
             <span>ログイン中: <strong>{{ user_email }}</strong></span>
-            <svg id="logout-btn" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
+            <svg id="logout-btn" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
         </div>
     </header>
 
@@ -266,7 +347,12 @@
     <div class="container">
         {% if recommended_articles %}
         <div class="recommendation-section">
-            <h2 class="section-title">★ 今週のおすすめ</h2>
+            <div class="section-header">
+                <h2 class="section-title">★ 今週のおすすめ</h2>
+                <button id="update-recommendations-btn">
+                    おすすめを今すぐ更新
+                </button>
+            </div>
             <div class="article-grid">
                 {% for article in recommended_articles %}
                     <a href="{{ url_for('article_detail', article_id=article.id) }}" class="article">
@@ -290,7 +376,7 @@
                                 </div>
                                 <div class="article-actions">
                                     <button class="read-later-btn {% if article.readLater %}active{% endif %}" data-article-id="{{ article.id }}" title="後で見る">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="m480-280 160-120-160-120v240Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="m480-280 160-120-160-120v240Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
                                     </button>
                                     <button class="delete-btn" data-article-id="{{ article.id }}">
                                         <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="20px" height="20px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>
@@ -304,6 +390,7 @@
         </div>
         {% endif %}
 
+        <h2 class="section-title">すべての技術記事</h2>
         <div class="article-grid">
             {% if articles %}
                 {% for article in articles %}
@@ -328,15 +415,13 @@
                                 </div>
                                 <div class="article-actions">
                                     <button class="read-later-btn {% if article.readLater %}active{% endif %}" data-article-id="{{ article.id }}" title="後で見る">
-                                        <svg width="20" height="20" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M20 0C9 0 0 9 0 20C0 31 9 40 20 40C31 40 40 31 40 20C40 9 31 0 20 0ZM20 36C11.18 36 4 28.82 4 20C4 11.18 11.18 4 20 4C28.82 4 36 11.18 36 20C36 28.82 28.82 36 20 36ZM21 10H18V22L28.4 28.4L30 25.8L21 20.4V10Z" fill="black"/>
-                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="m480-280 160-120-160-120v240Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
                                     </button>
                                     <button class="delete-btn" data-article-id="{{ article.id }}">
                                         <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="20px" height="20px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>
                                     </button>
                                 </div>
-                                </div>
+                            </div>
                         </div>
                     </a>
                 {% endfor %}
@@ -368,7 +453,7 @@
                             .then(response => {
                                 if (response.ok) {
                                     alert('記事を削除しました。');
-                                    window.location.reload(); 
+                                    window.location.reload();
                                 } else { throw new Error('削除に失敗しました。'); }
                             })
                             .catch(error => { console.error('Error:', error); alert(error.message); });
@@ -376,6 +461,7 @@
                     }
                 });
             });
+
             const readLaterButtons = document.querySelectorAll('.read-later-btn');
             readLaterButtons.forEach(button => {
                 button.addEventListener('click', (event) => {
@@ -391,19 +477,74 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.status === 'success') {
-                                // ボタンのアクティブ状態を切り替える
                                 button.classList.toggle('active', data.readLater);
                             } else {
                                 throw new Error('状態の更新に失敗しました。');
                             }
                         })
                         .catch(error => {
-                            console.error('Error:', error);
+                            console.error('Error toggling read later:', error);
                             alert(error.message);
                         });
                     });
                 });
             });
+
+            const updateRecButton = document.getElementById('update-recommendations-btn');
+            if (updateRecButton) {
+                updateRecButton.addEventListener('click', async () => {
+                    updateRecButton.disabled = true;
+                    updateRecButton.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#5f6368"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690l-57 57q-38-20-83-30t-90-10q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h-106v-80h180q0 15-2.5 41t-11.5 59q-63 118-181.5 186T480-160Zm112-192L480-464v-216h80v184l104 104-52 52Z"/></svg>
+                        更新中...`;
+
+                    try {
+                        const user = firebase.auth().currentUser;
+                        if (user) {
+                            const token = await user.getIdToken();
+                            const response = await fetch(`/api/generate-recommendations`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${token}`,
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+
+                            if (!response.ok) {
+                                let errorMsg = '更新に失敗しました';
+                                try {
+                                    const errorData = await response.json();
+                                    errorMsg = errorData.error || errorMsg;
+                                } catch (e) { /* JSON parse failed */ }
+                                throw new Error(errorMsg);
+                            }
+
+                            const data = await response.json();
+                            if (data.status === 'success') {
+                                 alert('おすすめ記事を更新しました！ページをリロードします。');
+                                 window.location.reload();
+                            } else if (data.status === 'skipped') {
+                                alert('おすすめ対象の記事が3件未満のため、更新されませんでした。');
+                                updateRecButton.disabled = false;
+                                updateRecButton.innerHTML = `
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#5f6368"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690l-57 57q-38-20-83-30t-90-10q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h-106v-80h180q0 15-2.5 41t-11.5 59q-63 118-181.5 186T480-160Zm112-192L480-464v-216h80v184l104 104-52 52Z"/></svg>
+                                    おすすめを今すぐ更新`;
+                            } else {
+                                throw new Error('サーバーから予期しない応答がありました。');
+                            }
+                        } else {
+                            throw new Error('ログインしていません。');
+                        }
+                    } catch (error) {
+                        console.error('Error updating recommendations:', error);
+                        alert(`エラー: ${error.message}`);
+                        updateRecButton.disabled = false;
+                        updateRecButton.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#5f6368"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690l-57 57q-38-20-83-30t-90-10q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h-106v-80h180q0 15-2.5 41t-11.5 59q-63 118-181.5 186T480-160Zm112-192L480-464v-216h80v184l104 104-52 52Z"/></svg>
+                            おすすめを今すぐ更新`;
+                    }
+                });
+            }
         });
     </script>
 </body>
