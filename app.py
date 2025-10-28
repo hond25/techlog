@@ -599,45 +599,6 @@ def generate_recommendations():
     except Exception as e:
         print(f"❌ おすすめ生成中にエラー: {e}")
         return jsonify({"error": "Failed to generate recommendations"}), 500
-    
-@app.route('/recommendations')
-@login_required_for_web
-def recommendations_page():
-    """
-    保存されたおすすめ記事を表示するページ。
-    """
-    user_id = g.user_id
-    try:
-        recommendation_ref = db.collection('users').document(user_id).collection('recommendations').document('weekly')
-        recommendation_doc = recommendation_ref.get()
-
-        if not recommendation_doc.exists:
-            return render_template('recommendations.html', user_email=g.user.email, articles=[], is_empty=True)
-
-        recommended_ids = recommendation_doc.to_dict().get('articleIds', [])
-        
-        if not recommended_ids:
-            return render_template('recommendations.html', user_email=g.user.email, articles=[], is_empty=True)
-
-        # IDを使って各記事の詳細を取得
-        articles = []
-        articles_ref = db.collection('users').document(user_id).collection('articles')
-        for article_id in recommended_ids:
-            doc = articles_ref.document(article_id).get()
-            if doc.exists:
-                article_data = doc.to_dict()
-                article_data['id'] = doc.id
-                if 'createdAt' in article_data and article_data['createdAt']:
-                    article_data['formatted_date'] = article_data['createdAt'].strftime('%Y-%m-%d')
-                articles.append(article_data)
-
-        return render_template('recommendations.html', 
-                               user_email=g.user.email, 
-                               articles=articles,
-                               is_empty=False)
-    except Exception as e:
-        print(f"❌ おすすめ記事の取得エラー: {e}")
-        return "ページの表示中にエラーが発生しました。", 500
 
 @app.route('/api/article/<article_id>/read_later', methods=['POST'])
 @login_required_for_api
