@@ -36,7 +36,7 @@ CORS(app)
 
 try:
     API_KEY = os.environ.get('GEMINI_API_KEY')
-    if not API_KEY or "YOUR_GEMINI_API_KEY" in API_KEY: # チェックを少し変更
+    if not API_KEY or "YOUR_GEMINI_API_KEY" in API_KEY:
         print("⚠️ 警告: Gemini APIキーが.envファイルに設定されていません。")
     genai.configure(api_key=API_KEY)
     model_name = 'gemini-2.5-flash-lite' #Geminiモデル
@@ -663,6 +663,14 @@ def toggle_read_later(article_id):
     except Exception as e:
         print(f"❌「後で見る」状態の変更中にエラー: {e}")
         return jsonify({"error": "Failed to update status"}), 500
+    
+@app.route('/privacy')
+def privacy_policy_page():
+    """
+    プライバシーポリシーを表示するページ。
+    このページはログイン不要でアクセス可能です。
+    """
+    return render_template('privacy.html')
     
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プライバシーポリシー - Techlog</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.7;
+      background-color: #f7f9fc;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border: 1px solid #dcdcdc;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    h1 {
+      font-size: 26px;
+      color: #1a3a5a;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+    h2 {
+      font-size: 20px;
+      color: #1a3a5a;
+      margin-top: 30px;
+      border-left: 5px solid #007bff;
+      padding-left: 10px;
+    }
+    p, ul {
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+    ul {
+      padding-left: 25px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    code {
+      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+      background-color: #f0f0f0;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .footer-nav {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .footer-nav a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .footer-nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>プライバシーポリシー</h1>
+    <p>Techlog（以下、「本サービス」）は、ユーザーの皆様（以下、「ユーザー」）のプライバシー保護を重視しています。このプライバシーポリシーでは、本サービスがどのように情報を収集、利用、管理するかについて説明します。</p>
+
+    <h2>1. 取得する情報</h2>
+    <p>本サービスは、以下の情報を取得します。</p>
+    <ul>
+      <li><b>Firebase Authenticationによる情報</b>: ユーザー登録時に、メールアドレスおよび一意のユーザーID (UID) を取得します。</li>
+      <li><b>Chrome拡張機能から送信される情報</b>: ユーザーが拡張機能のボタンを押下した際、以下の閲覧履歴データを取得します。
+        <ul>
+          <li>閲覧したページのURL</li>
+          <li>閲覧したページのタイトル</li>
+          <li>閲覧日時</li>
+        </ul>
+      </li>
+      <li><b>サーバー（本アプリケーション）で生成・取得する情報</b>:
+        <ul>
+          <li>閲覧履歴のURLに基づき、当該Webページの本文テキストおよびOGP（Open Graph Protocol）メタデータ。</li>
+          <li>Google Gemini APIを使用して生成された、記事の要約、AIによるタイトル、および関連タグ。</li>
+        </ul>
+      </li>
+      <li><b>ユーザーが入力する情報</b>: 記事に対する「振り返り」データ（有用性、感想、メモなど）。</li>
+      <li><b>Cookie</b>: 認証状態を維持するため、<code>firebaseToken</code> という名前のCookieを使用します。</li>
+    </ul>
+
+    <h2>2. 情報の利用目的</h2>
+    <p>取得した情報は、以下の目的のためにのみ利用されます。</p>
+    <ul>
+      <li>本サービスの認証および機能（閲覧履歴の保存、要約、振り返りの記録）を提供するため。</li>
+      <li>ユーザーごとにパーソナライズされた記事の推薦（「おすすめ記事」機能）を行うため。</li>
+      <li>本サービスの品質向上、障害対応、および利用状況の分析のため。</li>
+    </ul>
+
+    <h2>3. 情報の保存先</h2>
+    <p>取得および生成されたデータは、Google Cloud Platform 上の Firebase (Firestore) データベースに安全に保存されます。データはユーザーのFirebaseユーザーIDに関連付けて管理されます。</p>
+
+    <h2>4. サードパーティへの情報提供</h2>
+    <p>本サービスは、以下のサードパーティサービスを利用しています。</p>
+    <ul>
+      <li><b>Firebase (Google LLC)</b>: ユーザー認証（Authentication）およびデータベース（Firestore）のために利用します。</li>
+      <li><b>Google Gemini API (Google LLC)</b>: 取得したWebページの内容を分析し、要約およびタグを生成するために、記事のテキストデータを送信します。</li>
+      <li><b>Render (Render Inc.)</b>: 本アプリケーション（サーバー）のホスティングに利用します。</li>
+    </ul>
+    <p>法令に基づく場合、またはユーザー本人の同意がある場合を除き、上記以外の第三者に個人情報を提供することはありません。</p>
+
+    <h2>5. データの削除について</h2>
+    <p>ユーザーは、本サービスのダッシュボード機能を通じて、保存された個々の記事データ（要約、振り返りを含む）をいつでも削除することができます。</p>
+    <p>アカウント全体の削除を希望される場合は、運営者までご連絡ください。</p>
+
+    <h2>6. プライバシーポリシーの変更</h2>
+    <p>本サービスは、必要に応じて本プライバシーポリシーを変更することがあります。変更後のポリシーは、本ページに掲載された時点から効力を生じるものとします。</p>
+
+    <div class="footer-nav">
+      <a href="/">トップページに戻る</a>
+    </div>
+  </div>
+</body>
+</html>
