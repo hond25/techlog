@@ -6,71 +6,429 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <link rel="stylesheet" href="https://indestructibletype-fonthosting.github.io/renner.css" type="text/css" charset="utf-8" />
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 40vh;
+        html{
+            scroll-behavior: smooth;
+        }
+        body{
             margin: 0;
             background-color: #ffffff;
         }
-        .container {
-            text-align: center;
+        li {
+            list-style: none;
         }
-        h1 {
-            font-size: 2.5em;
-            color: #343a40;
-            margin-bottom: 1em;
-
-        }
-        p {
-            font-size: 1.1em;
-            color: #6c757d;
-            margin-bottom: 2em;
-        }
-        .button-group {
+        #header {
             display: flex;
-            gap: 1em;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0 30px;
+            background-image: linear-gradient(90deg, #4A6077, #0F1E32);
+            flex-shrink: 0;
         }
-        .btn {
-            text-decoration: none;
-            font-size: 1em;
-            padding: 12px 36px;
-            border-radius: 50px;
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-        }
-        .btn-primary {
-            background-color: #1b94ff;
+        .site_title {
             color: white;
+            font-family: 'Renner*';
+            font-weight: bold;
+            font-size: 1.5em;
+            margin: 0;
+        }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .header-nav ul {
+            display: flex;
+            padding: 0;
+            margin: 0;
+            gap: 25px;
+        }
+        .header-nav li {
+            list-style: none;
+            margin-right: 0;
+        }
+        .header-nav li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .header-nav li a:hover {
+            opacity: 0.7;
+        }
+
+        .header-login-btn {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #4a6077;
+            background-color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .header-login-btn:hover {
+            background-color: #f0f0f0;
+        }
+        .site_title {
+            color: white;
+            font-family: 'Renner*';
             font-weight: bold;
         }
-        .btn-primary:hover {
-            background-color: rgb(38, 110, 187);
-        }
-        .btn-secondary {
+        #main_visual {
+            width: 100%;
+            height: 800px;
             background-color: #ffffff;
-            border: 1px solid #000000;
-            color: rgb(0, 0, 0);
+            position: relative;
+            overflow: hidden;
         }
-        .btn-secondary:hover {
-            background-color: #dbdbdb;
+        #main_visual img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            
+            opacity: 0;
+            animation: crossfade 10s infinite; 
+        }
+        #main_visual .techlog_img {
+            animation-delay: 8s;
+        }
+
+        @keyframes crossfade {
+            0%   { opacity: 0; }
+            25%  { opacity: 1; }
+            50%  { opacity: 1; }
+            75%  { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .container {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 60px 40px 100px;
+            box-sizing: border-box; /* パディングを含めて幅を計算 */
+        }
+
+        .hero-section {
+            text-align: center;
+            position: relative;
+            padding: 40px 0;
+            max-width: 800px; /* テキストブロックの最大幅 */
+            margin: 0 auto 80px auto; /* 上下にマージン、左右は自動 */
+        }
+
+        .hero-image {
+            position: absolute;
+            width: 300px; /* イラストの幅（仮） */
+            height: auto;
+        }
+
+        .hero-image.left {
+            top: 0;
+            left: -270px; /* テキストブロックの左外側へ配置 */
+
+        }
+
+        .hero-image.right {
+            top: 20px;
+            right: -270px; /* テキストブロックの右外側へ配置 */
+        }
+
+        .hero-section h1 {
+            font-size: 36px; /* 40px */
+            font-weight: bold;
+            margin-bottom: 50px;
+            line-height: 1.5;
+            color: #000000;
+        }
+
+        .hero-section p {
+            font-size: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .features-section {
+            display: flex;
+            justify-content: space-around; /* 各アイテムを均等に配置 */
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            flex: 1; /* 3つのアイテムで幅を均等に分割 */
+            text-align: center;
+            width: 380px;
+            height: 380px;
+            border-left: 2px solid #4A6077;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 最初のアイテムの左ボーダーは不要 */
+        .feature-item:first-child {
+            border-left: none;
+        }
+
+        .feature-item .number {
+            font-family: 'Renner*';
+            font-weight: bold;
+            font-size: 48px;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+
+        .feature-item img {
+            width: 60px;
+            height: auto;
+            display: inline-block;
+        }
+
+        .feature-item h3 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .feature-item p {
+            font-size: 16px;
+            color: #000000;
+            font-weight: regular;
+        }
+        #start {
+            background-color: #4A6077;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* padding: 50px 20px; */
+            box-sizing: border-box;
+        }
+        #start h2 {
+             font-size: 32px;
+             color: white;
+             margin-bottom: 30px;
+             margin: 50px 0;
+        }
+        .use_img{
+            width: 1200px;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 50px;
+        }
+        #login {
+            justify-content: center;
+            text-align: center;
+        }
+        #footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 auto;
+            height: 80px;
+            /* width: 100%; */
+            padding: 0 30px;
+            background-image: linear-gradient(90deg, #4A6077, #0F1E32);
+            text-decoration: none;
+        }
+        #footer ul {
+            display: flex;
+            padding: 10px 0;
+        }
+        #footer li {
+            margin-right:  30px;
+            list-style: none;
+        }
+        #footer li a {
+            color: #ffffff;
+        }
+        #footer li a:hover {
+            opacity: 0.7;
+        }
+        @media (max-width: 768px) {
+            #header {
+                padding: 0.8em 1em;
+                height: auto;
+            }
+            .site_title {
+                font-size: 1.2em;
+            }
+            .header-nav {
+                font-size: 0.8em;
+                gap: 10px;
+            }
+            .header-nav ul {
+                gap: 15px;
+            }
+            .header-login-btn {
+                font-size: 1em;
+                padding: 8px 12px;
+            }
+            #main_visual {
+                height: 50vh;
+            }
+            .container {
+                padding: 40px 20px;
+            }
+            .hero-section {
+                padding: 20px 0;
+                margin-bottom: 40px;
+            }
+            .hero-section h1 {
+                font-size: 14px;
+                margin-bottom: 30px;
+            }
+            .hero-section p {
+                font-size: 16px;
+            }
+            .hero-image {
+                display: none;
+            }
+
+            .features-section {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .feature-item {
+                width: 100%;
+                height: auto;
+                border-left: none;
+                border-top: 2px solid #4A6077;
+                padding: 30px 0;
+            }
+            .feature-item:first-child {
+                border-top: none;
+            }
+            .feature-item .number {
+                font-size: 40px;
+            }
+            .feature-item h3 {
+                font-size: 18px;
+            }
+            #start {
+                height: auto;
+                padding: 60px 20px;
+            }
+            #login {
+                height: auto;
+                padding: 60px 20px;
+            }
+            #footer {
+                flex-direction: column;
+                height: auto;
+                padding: 30px 20px;
+                gap: 20px;
+            }
+            #footer nav ul {
+                flex-direction: column;
+                padding: 0;
+                margin: 0;
+                align-items: center;
+                gap: 15px;
+            }
+            #footer li {
+                margin-right: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Tech Log</h1>
-        <p>あなたが閲覧したIT技術に関連するサイトを、忘れないように振り返りをしよう！</p>
-        <div class="button-group">
-            <button id="login-btn" class="btn btn-primary">ログイン</button>
-            <button id="signup-btn" class="btn btn-secondary">新規登録</button>
-        </div>
+    <header id="header">
+        <h1 class="site_title">Tech Log</h1>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="#concept">コンセプト</a></li>
+                <li><a href="#start">始め方</a></li>
+            </ul>
+            <button id="login-btn-header" class="header-login-btn">ログイン</button>
+        </nav>
+    </header>
+    <div id="main_visual">
+        <img src="{{ url_for('static', filename='img/main1.png') }}" alt="履歴一覧" class="log_img">
+        <img src="{{ url_for('static', filename='img/main2.png') }}" alt="サービス画像" class="techlog_img">
+
     </div>
+    <div class="container">
+        <section class="hero-section" id="concept">
+            <img src="{{ url_for('static', filename='img/pc_illust.png') }}" alt="PCを使う女の子" class="hero-image right">
+            <img src="{{ url_for('static', filename='img/smartphone_illust.png') }}" alt="スマホを使う女の子" class="hero-image left">
+
+            <h1>
+                「後で読もう」と思ったあの技術記事<br>
+                情報の海で見失っていませんか？
+            </h1>
+            <p>
+                エンジニアの脳は常に新しい情報で溢れ、全てを記憶するのは不可能であり、<br>
+                読んだだけの知識は使える技術として定着する前に失われがちです。<br>
+                Tech Log はその「知識」と「技術」のギャップを埋めるためのサービスです。<br>
+                まず、AIがあなたの閲覧履歴からIT技術の情報だけを自動で収集、整理。<br>
+                あなたが「何を学んだか」を振り返ることで、その情報を「確かな技術」として定着させます。
+            </p>
+        </section>
+
+        <section class="features-section">
+            
+            <div class="feature-item">
+                <div class="number">01</div>
+                <img src="{{ url_for('static', filename='img/log.png') }}" alt="ログアイコン" class="log_icon">
+                <h3>大量の閲覧履歴</h3>
+                <p>
+                    1日の閲覧履歴が多すぎて情報が<br>
+                    どこで見たのかわからない
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="number">02</div>
+                <img src="{{ url_for('static', filename='img/filter.png') }}" alt="フィルターアイコン" class="filter_icon">
+                <h3>履歴の整理</h3>
+                <p>
+                    フィルタリングと要約で<br>
+                    必要な情報のみに整理する
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="number">03</div>
+                <img src="{{ url_for('static', filename='img/pen.png') }}" alt="ペンアイコン" class="pen_icon">
+                <h3>振り返る</h3>
+                <p>
+                    それぞれのサイトを振り返り、<br>
+                    知識として定着させる
+                </p>
+            </div>
+        </section>
+    </div>
+    <div id="start">
+        <h2>使い方</h2>
+        <img src="{{ url_for('static', filename='img/use1.png') }}" alt="使い方1" class="use_img">
+        <img src="{{ url_for('static', filename='img/use2.png') }}" alt="使い方2" class="use_img">
+    </div>
+    <div id="login">
+        <button id="login-btn-center" class="header-login-btn" style="padding: 15px 30px; font-size: 1.1em; margin: 50px 0;">
+            Googleアカウントでログイン
+        </button>
+    </div>
+    <footer id="footer">
+        <h1 class="site_title">Tech Log</h1>
+        <nav>
+            <ul>
+                <li><a href="#concept">コンセプト</a></li>
+                <li><a href="#start">始め方</a></li>
+                <li><a href="privacy">プライバシーポリシー</a></li>
+            </ul>
+        </nav>
+    </footer>
 
     <script>
         const firebaseConfig = {
@@ -105,8 +463,8 @@
                 });
         }
 
-        document.getElementById('login-btn').addEventListener('click', handleGoogleLogin);
-        document.getElementById('signup-btn').addEventListener('click', handleGoogleLogin);
+        document.getElementById('login-btn-header').addEventListener('click', handleGoogleLogin);
+        document.getElementById('login-btn-center').addEventListener('click', handleGoogleLogin);
     </script>
 </body>
 </html>

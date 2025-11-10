@@ -330,6 +330,24 @@
             .article-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {
+            header {
+                padding: 0.8em 1em;
+            }
+            header h1 {
+                font-size: 1.2em;
+            }
+            .user-info {
+                font-size: 0.8em;
+                gap: 10px;
+            }
+            .user-info span {
+                max-width: 5em;
+                display: inline-block;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+            }
             .article-grid { grid-template-columns: 1fr; }
             .container {
                 padding-top: 5em; /* Adjust top padding for button on mobile */

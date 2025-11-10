@@ -95,6 +95,42 @@
         .btn.all:hover {
             background-color: #42566b; 
         }
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8em 1em;
+            }
+            header h1 {
+                font-size: 1.2em;
+            }
+            .user-info {
+                font-size: 0.8em;
+                gap: 10px;
+            }
+            .user-info span {
+                max-width: 5em;
+                display: inline-block;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+            }
+            .button-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .btn {
+                padding: 15px;
+            }
+            h1#title {
+                font-size: 1.5em;
+                margin-bottom: 1.5em;
+            }
+            .content-wrapper {
+                 padding: 1em;
+                 align-items: flex-start;
+                 padding-top: 3em;
+            }
+        }
     </style>
 </head>
 <body>
