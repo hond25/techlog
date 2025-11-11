@@ -242,31 +242,64 @@
             margin-top: 2em; /* 上のコンテンツとの余白 */
         }
         .delete-btn {
-            background-color:  #e9ecef;
-            border: none;
-            padding: 5px 10px;
+            background-color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 5px 8px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            display: flex; /* アイコンを中央に配置するために追加 */
-            align-items: center;
+            font-size: 0.8em;
+            flex-shrink: 0;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+            color: #ffffff;
         }
+        
+        .delete-btn svg {
+            fill: currentColor;
+        }
+
         .delete-btn:hover {
-            background: #ededed;
+            background-color: #ffffff;
+            border-color: #e74c3c;
+            color: #e74c3c;
         }
         .read-later-btn {
-            background-color: #e9ecef;
-            border: none;
-            padding: 5px 10px;
+            background-color: rgb(210, 210, 210);
+            border-color: rgb(210, 210, 210);
+            color: #ffffff;
+            border: 1px solid;
+            padding: 5px 8px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
             display: flex;
             align-items: center;
+            margin-right: 8px;
         }
-        .read-later-btn:hover { background: #dadada; }
-        .read-later-btn.active { background-color: #ffc107; }
-        .read-later-btn.active:hover { background-color: #e0a800; }
+        .read-later-btn svg {
+             fill: currentColor;
+        }
+        .read-later-btn:hover {
+            background-color: rgb(255, 210, 75);
+            color: #ffffff;
+        }
+        
+        .read-later-btn.active {
+            background-color: rgb(255, 210, 75);
+            border-color: rgb(255, 210, 75);
+            color: #ffffff;
+        }
+        .read-later-btn.active svg {
+             fill: #ffffff;
+        }
+        
+        .read-later-btn.active:hover {
+            background-color: rgb(210, 210, 210);
+            border-color: rgb(210, 210, 210);
+            color: #ffffff;
+        }
+        .read-later-btn.active:hover svg {
+            fill: #ffffff
+        }
 
         .action-buttons {
             display: flex;
