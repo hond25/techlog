@@ -73,6 +73,38 @@
         .header-login-btn:hover {
             background-color: #f0f0f0;
         }
+
+        button {
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+            padding: 10px 20px;
+            border-radius: 100px;
+            background: #FF780A;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #FF780A;
+        }
+
+        button > svg {
+            width: 34px;
+            margin-left: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button:hover svg {
+            transform: translateX(5px);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
         .site_title {
             color: white;
             font-family: 'Renner*';
@@ -99,14 +131,14 @@
             animation: crossfade 10s infinite; 
         }
         #main_visual .techlog_img {
-            animation-delay: 8s;
+            animation-delay: 6s;
         }
 
         @keyframes crossfade {
             0%   { opacity: 0; }
             25%  { opacity: 1; }
             50%  { opacity: 1; }
-            75%  { opacity: 1; }
+            75%  { opacity: 0; }
             100% { opacity: 0; }
         }
         .container {
@@ -114,32 +146,32 @@
             max-width: 1440px;
             margin: 0 auto;
             padding: 60px 40px 100px;
-            box-sizing: border-box; /* パディングを含めて幅を計算 */
+            box-sizing: border-box;
         }
 
         .hero-section {
             text-align: center;
             position: relative;
             padding: 40px 0;
-            max-width: 800px; /* テキストブロックの最大幅 */
-            margin: 0 auto 80px auto; /* 上下にマージン、左右は自動 */
+            max-width: 900px;
+            margin: 0 auto 80px auto;
         }
 
         .hero-image {
             position: absolute;
-            width: 300px; /* イラストの幅（仮） */
+            width: 300px;
             height: auto;
         }
 
         .hero-image.left {
             top: 0;
-            left: -270px; /* テキストブロックの左外側へ配置 */
+            left: -250px;
 
         }
 
         .hero-image.right {
             top: 20px;
-            right: -270px; /* テキストブロックの右外側へ配置 */
+            right: -250px;
         }
 
         .hero-section h1 {
@@ -158,26 +190,21 @@
 
         .features-section {
             display: flex;
-            justify-content: space-around; /* 各アイテムを均等に配置 */
+            justify-content: space-around;
             width: 100%;
             margin-top: 40px;
+            align-items: center;
         }
 
         .feature-item {
-            flex: 1; /* 3つのアイテムで幅を均等に分割 */
+            flex: 1;
             text-align: center;
             width: 380px;
             height: 380px;
-            border-left: 2px solid #4A6077;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        /* 最初のアイテムの左ボーダーは不要 */
-        .feature-item:first-child {
-            border-left: none;
         }
 
         .feature-item .number {
@@ -205,30 +232,89 @@
             color: #000000;
             font-weight: regular;
         }
+        .feature-separator {
+            flex-shrink: 0;
+            padding: 0 20px;
+        }
         #start {
             background-color: #4A6077;
+            padding: 80px 20px;
+            color: white;
+            box-sizing: border-box;
+        }
+        #start h2 {
+             font-size: 36px;
+             margin: 0;
+             margin-bottom: 70px;
+             font-weight: bold;
+             text-align: center;
+        }
+        
+        .start_steps_container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 70px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .step_item {
+            width: 100%;
+        }
+        
+        .step_header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .step_number {
+            background-color: #ffffff;
+            color: #000000;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* padding: 50px 20px; */
-            box-sizing: border-box;
+            font-weight: bold;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.2;
+            flex-shrink: 0;
+            opacity: 1;
         }
-        #start h2 {
-             font-size: 32px;
-             color: white;
-             margin-bottom: 30px;
-             margin: 50px 0;
+        .step_number span:first-child {
+            font-size: 12px;
         }
-        .use_img{
-            width: 1200px;
-            max-width: 100%;
+        .step_number span:last-child {
+            font-size: 24px;
+        }
+        .step_title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .step_image {
+            width: 100%;
             height: auto;
-            margin-bottom: 50px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         #login {
+            display: flex;
             justify-content: center;
             text-align: center;
+            padding-top: 50px;
+            padding-bottom: 50px;
+
+        }
+        #login-btn-center{
+            color: white;
         }
         #footer {
             display: flex;
@@ -299,10 +385,12 @@
                 flex-direction: column;
                 gap: 30px;
             }
+            .feature-separator {
+                display: none;
+            }
             .feature-item {
                 width: 100%;
                 height: auto;
-                border-left: none;
                 border-top: 2px solid #4A6077;
                 padding: 30px 0;
             }
@@ -318,6 +406,32 @@
             #start {
                 height: auto;
                 padding: 60px 20px;
+            }
+            #start h2 {
+                font-size: 28px;
+                margin-bottom: 50px;
+            }
+            .start_steps_container {
+                gap: 50px;
+            }
+            .step_header {
+                gap: 15px;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+            }
+            .step_number {
+                width: 40px;
+                height: 40px;
+            }
+            .step_number span:first-child {
+                font-size: 8px;
+            }
+            .step_number span:last-child {
+                font-size: 16px;
+            }
+            .step_title {
+                font-size: 16px;
             }
             #login {
                 height: auto;
@@ -388,20 +502,34 @@
                 </p>
             </div>
 
+            <div class="feature-separator">
+                <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.7746 0H0L25.6338 35L0 70H15.7746L42.3944 35L15.7746 0Z" fill="#000000"/>
+                <path d="M43.3801 0H27.6055L53.2393 35L27.6055 70H43.3801L69.9998 35L43.3801 0Z" fill="#000000"/>
+                </svg>
+            </div>
+
             <div class="feature-item">
                 <div class="number">02</div>
-                <img src="{{ url_for('static', filename='img/filter.png') }}" alt="フィルターアイコン" class="filter_icon">
-                <h3>履歴の整理</h3>
+                <img src="{{ url_for('static', filename='img/robot.png') }}" alt="フィルターアイコン" class="filter_icon">
+                <h3>AIが履歴の整理をする</h3>
                 <p>
                     フィルタリングと要約で<br>
                     必要な情報のみに整理する
                 </p>
             </div>
 
+            <div class="feature-separator">
+                <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.7746 0H0L25.6338 35L0 70H15.7746L42.3944 35L15.7746 0Z" fill="#000000"/>
+                <path d="M43.3801 0H27.6055L53.2393 35L27.6055 70H43.3801L69.9998 35L43.3801 0Z" fill="#000000"/>
+                </svg>
+            </div>
+
             <div class="feature-item">
                 <div class="number">03</div>
                 <img src="{{ url_for('static', filename='img/pen.png') }}" alt="ペンアイコン" class="pen_icon">
-                <h3>振り返る</h3>
+                <h3>簡単に振り返る</h3>
                 <p>
                     それぞれのサイトを振り返り、<br>
                     知識として定着させる
@@ -411,12 +539,55 @@
     </div>
     <div id="start">
         <h2>使い方</h2>
-        <img src="{{ url_for('static', filename='img/use1.png') }}" alt="使い方1" class="use_img">
-        <img src="{{ url_for('static', filename='img/use2.png') }}" alt="使い方2" class="use_img">
+        <div class="start_steps_container">
+            <div class="step_item">
+                <div class="step_header">
+                    <div class="step_number">
+                        <span>STEP</span>
+                        <span>01</span>
+                    </div>
+                    <span class="step_title">Chromeストアでダウンロード</span>
+                </div>
+                <img src="{{ url_for('static', filename='img/use1.png') }}" alt="使い方1" class="step_image">
+            </div>
+            <div class="step_item">
+                <div class="step_header">
+                    <div class="step_number">
+                        <span>STEP</span>
+                        <span>02</span>
+                    </div>
+                    <span class="step_title">拡張機能を有効にする</span>
+                </div>
+                <img src="{{ url_for('static', filename='img/use2.png') }}" alt="使い方2" class="step_image">
+            </div>
+            <div class="step_item">
+                <div class="step_header">
+                    <div class="step_number">
+                        <span>STEP</span>
+                        <span>03</span>
+                    </div>
+                    <span class="step_title">サイトの印象や感じたことを入力</span>
+                </div>
+                <img src="{{ url_for('static', filename='img/techlog_hurikaeri.png') }}" alt="使い方2" class="step_image">
+            </div>
+        </div>
     </div>
     <div id="login">
-        <button id="login-btn-center" class="header-login-btn" style="padding: 15px 30px; font-size: 1.1em; margin: 50px 0;">
-            Googleアカウントでログイン
+        <button id="login-btn-center">
+            <span>Googleアカウントでログイン</span>
+            <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 74 74"
+            height="34"
+            width="34"
+            >
+            <circle stroke-width="3" stroke="white" r="35.5" cy="37" cx="37"></circle>
+            <path
+                fill="white"
+                d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"
+            ></path>
+            </svg>
         </button>
     </div>
     <footer id="footer">
