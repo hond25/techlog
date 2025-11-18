@@ -44,9 +44,7 @@
         }
         .breadcrumbs {
             padding: 12px 2em;
-            background-color: #fff;
-            border-bottom: 1px solid #dee2e6;
-            font-size: 0.9em;
+            font-size: 0.6em;
         }
         .breadcrumbs ul {
             display: flex;
@@ -343,6 +341,47 @@
         .read-later-btn.active:hover svg {
             fill: #ffffff
         }
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto 1.5em auto;
+            padding: 0.8em 1.5em;
+        }
+        .search-form {
+            display: flex;
+            width: 100%;
+        }
+        .search-input-wrapper {
+            position: relative; /* アイコンを絶対配置するための基準 */
+            flex-grow: 1; /* 幅いっぱいに広がる */
+            display: flex; /* 中のinputを100%幅にするため */
+        }
+        .search-icon {
+            position: absolute; /* アイコンを絶対配置 */
+            top: 50%;
+            left: 12px; /* 左からの位置 */
+            transform: translateY(-50%); /* 垂直方向の中央揃え */
+            width: 20px; /* アイコンのサイズを調整 */
+            height: 20px;
+            fill: #999; /* アイコンの色をplaceholder風に */
+            pointer-events: none; /* アイコンがクリックを妨げないように */
+        }
+        .search-form input[type="search"] {
+            width: 100%; /* 親要素いっぱいに広がる */
+            padding: 12px 15px 12px 45px; /* 左側にアイコン分のスペース(45px)を確保 */
+            font-size: 1em;
+            border: 1px solid #ced4da;
+            border-radius: 5px 0 0 5px;
+            box-sizing: border-box;
+        }
+        .search-form button {
+            padding: 0 20px;
+            font-size: 1em;
+            background-color: #4a6077;
+            color: white;
+            border: 1px solid #4a6077;
+            border-radius: 0 5px 5px 0; /* 左側は入力欄と連結 */
+            cursor: pointer;
+        }
         @media (max-width: 992px) {
             .article-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -410,6 +449,21 @@
             <li>ダッシュボード</li>
           {% endif %}
         </ul>
+    </div>
+    <div class="search-container">
+        <form action="{{ url_for('dashboard') }}" method="GET" class="search-form">
+            
+            <div class="search-input-wrapper">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path d="M 20.5 6 C 12.515556 6 6 12.515562 6 20.5 C 6 28.484438 12.515556 35 20.5 35 C 23.773158 35 26.788919 33.893018 29.220703 32.050781 L 38.585938 41.414062 A 2.0002 2.0002 0 1 0 41.414062 38.585938 L 32.050781 29.220703 C 33.893017 26.788918 35 23.773156 35 20.5 C 35 12.515562 28.484444 6 20.5 6 z M 20.5 10 C 26.322685 10 31 14.677319 31 20.5 C 31 23.295711 29.914065 25.820601 28.148438 27.697266 A 2.0002 2.0002 0 0 0 27.701172 28.144531 C 25.824103 29.912403 23.29771 31 20.5 31 C 14.677315 31 10 26.322681 10 20.5 C 10 14.677319 14.677315 10 20.5 10 z"/></svg>
+                
+                <input type="search" name="q" placeholder="タイトルや振り返り文から検索..." value="{{ keyword_query or '' }}">
+            </div>
+            {% if current_filter %}
+            <input type="hidden" name="filter" value="{{ current_filter }}">
+            {% endif %}
+            
+            <button type="submit">検索</button>
+        </form>
     </div>
 
     <div class="container">

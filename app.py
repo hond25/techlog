@@ -321,9 +321,9 @@ def select_view():
 def dashboard():
     user_id = g.user_id
     tag_filter = request.args.get('filter')
+    keyword_query = request.args.get('q')
 
     try:
-        # --- 1. おすすめ記事のリストを取得 ---
         recommended_articles = []
         recommended_ids = []
         recommendation_ref = db.collection('users').document(user_id).collection('recommendations').document('weekly')
@@ -342,11 +342,13 @@ def dashboard():
                             article_data['formatted_date'] = article_data['createdAt'].strftime('%Y-%m-%d')
                         recommended_articles.append(article_data)
 
-        # --- 2. 通常の記事リストを取得 (おすすめとして表示する記事は除外する) ---
         articles_ref = db.collection('users').document(user_id).collection('articles')
         
         if tag_filter:
-            query = articles_ref.where('tags', 'array_contains', tag_filter).order_by('createdAt', direction=firestore.Query.DESCENDING)
+            if tag_filter == 'readLater':
+                query = articles_ref.where('readLater', '==', True).order_by('createdAt', direction=firestore.Query.DESCENDING)
+            else:
+                query = articles_ref.where('tags', 'array_contains', tag_filter).order_by('createdAt', direction=firestore.Query.DESCENDING)
         else:
             query = articles_ref.order_by('createdAt', direction=firestore.Query.DESCENDING)
         
@@ -358,6 +360,25 @@ def dashboard():
                 continue
 
             article_data = doc.to_dict()
+            
+            if keyword_query:
+                keyword_lower = keyword_query.lower()
+
+                search_corpus = ""
+                search_corpus += article_data.get('generatedTitle', '').lower()
+                search_corpus += article_data.get('originalTitle', '').lower()
+                search_corpus += article_data.get('summary', '').lower()
+
+                if 'reflection' in article_data and isinstance(article_data['reflection'], dict):
+                    reflection_data = article_data['reflection']
+                    search_corpus += reflection_data.get('specific_impression', '').lower()
+                    search_corpus += reflection_data.get('why_important', '').lower()
+                    search_corpus += reflection_data.get('what_i_got', '').lower()
+                    search_corpus += reflection_data.get('memo', '').lower()
+
+                if keyword_lower not in search_corpus:
+                    continue 
+
             article_data['id'] = doc.id
             if 'createdAt' in article_data and article_data['createdAt']:
                 article_data['formatted_date'] = article_data['createdAt'].strftime('%Y-%m-%d')
@@ -366,15 +387,22 @@ def dashboard():
             
             articles.append(article_data)
 
-        # --- 3. おすすめと通常のリストを両方テンプレートに渡す ---
         return render_template('dashboard.html', 
                                user_email=g.user.email, 
                                articles=articles,
-                               recommended_articles=recommended_articles, # おすすめリストを追加
-                               current_filter=tag_filter)
+                               recommended_articles=recommended_articles,
+                               current_filter=tag_filter,
+                               keyword_query=keyword_query)
 
     except Exception as e:
         print(f"❌ データ取得エラー: {e}")
+        if 'index' in str(e):
+            error_message = """
+            <h1>データベース設定エラー</h1>
+            <p>データの絞り込み中にエラーが発生しました。これはFirestoreの「複合インデックス」が不足していることが原因の可能性が高いです。</p>
+            <p><strong>解決策:</strong> ターミナルやコンソールのエラーログに表示されているURLにアクセスし、Firebaseの画面の指示に従って必要なインデックスを作成してください。作成には数分かかることがあります。</p>
+            """
+            return error_message, 500
         return "データの取得中にエラーが発生しました。", 500
     
 @app.route('/article/<article_id>')
