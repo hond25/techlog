@@ -432,7 +432,7 @@
 </head>
 <body>
     <header>
-        <h1><a href="{{ url_for('select_view') }}">Tech Log</a></h1>
+        <h1><a href="{{ url_for('dashboard') }}">Tech Log</a></h1>
         <div class="user-info">
             <span>ログイン中: <strong>{{ user_email }}</strong></span>
             <svg id="logout-btn" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
@@ -441,7 +441,7 @@
 
     <div class="breadcrumbs">
         <ul>
-          <li><a href="{{ url_for('select_view') }}">TOP</a></li>
+          <li><a href="{{ url_for('dashboard') }}">TOP</a></li>
           {% if current_filter %}
             <li><a href="{{ url_for('dashboard') }}">ダッシュボード</a></li>
             <li>{{ current_filter }}</li>
@@ -647,7 +647,7 @@
 
                             const data = await response.json();
                             if (data.status === 'success') {
-                                 alert('おすすめ記事を更新しました！ページをリロードします。');
+                                //  alert('おすすめ記事を更新しました！ページをリロードします。');
                                  window.location.reload();
                             } else if (data.status === 'skipped') {
                                 alert('おすすめ対象の記事が3件未満のため、更新されませんでした。');

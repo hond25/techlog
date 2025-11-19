@@ -626,7 +626,7 @@
                     // Cookieの有効期限を1時間に設定
                     document.cookie = `firebaseToken=${idToken}; path=/; max-age=3600`;
                     // ログイン後はダッシュボードに遷移
-                    window.location.href = '/select';
+                    window.location.href = '/';
                 })
                 .catch((error) => {
                     console.error('Googleログインエラー:', error);

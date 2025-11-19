@@ -291,30 +291,29 @@ def index():
     if id_token:
         try:
             auth.verify_id_token(id_token)
-            return redirect(url_for('select_view'))
+            return redirect(url_for('dashboard'))
         except:
             return render_template('login.html')
     return render_template('login.html')
 
-@app.route('/select')
-@login_required_for_web
-def select_view():
-    user_id = g.user_id
-    try:
-        articles_ref = db.collection('users').document(user_id).collection('articles').stream()
-        all_tags = set()
-        for doc in articles_ref:
-            article_data = doc.to_dict()
-            if 'tags' in article_data and article_data['tags']:
-                for tag in article_data['tags']:
-                    all_tags.add(tag)
-        sorted_tags = sorted(list(all_tags))
-        return render_template('select_view.html', tags=sorted_tags, user_email=g.user.email)
-    except Exception as e:
-        print(f"❌ タグ一覧の取得エラー: {e}")
-        return "タグの取得中にエラーが発生しました。", 500
-    
-# app.py
+# @app.route('/select')
+# @login_required_for_web
+# def select_view():
+#     user_id = g.user_id
+#     try:
+#         articles_ref = db.collection('users').document(user_id).collection('articles').stream()
+#         all_tags = set()
+#         for doc in articles_ref:
+#             article_data = doc.to_dict()
+#             if 'tags' in article_data and article_data['tags']:
+#                 for tag in article_data['tags']:
+#                     all_tags.add(tag)
+#         sorted_tags = sorted(list(all_tags))
+#         return render_template('select_view.html', tags=sorted_tags, user_email=g.user.email)
+#     except Exception as e:
+#         print(f"❌ タグ一覧の取得エラー: {e}")
+#         return "タグの取得中にエラーが発生しました。", 500
+
 
 @app.route('/dashboard')
 @login_required_for_web
