@@ -4,119 +4,132 @@
     <title>Tech Log - 閲覧した技術記事を自動で記録・要約</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <link rel="stylesheet" href="https://indestructibletype-fonthosting.github.io/renner.css" type="text/css" charset="utf-8" />
+    
     <style>
-        html{
+        :root {
+            --primary: #000000;
+            --accent: #0066CC;
+            --bg-body: #FBFBFD;
+            --bg-section: #FFFFFF;
+            --text-main: #1D1D1F;
+            --text-sub: #86868B;
+            --glass: rgba(255, 255, 255, 0.8);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --radius-lg: 24px;
+            --radius-pill: 100px;
+        }
+
+        html {
             scroll-behavior: smooth;
+            font-size: 16px;
         }
-        body{
+
+        body {
             margin: 0;
-            background-color: #ffffff;
+            background-color: var(--bg-body);
+            font-family: 'Jost', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
         }
-        li {
-            list-style: none;
-        }
+
+        /* --- Header --- */
         #header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 80px;
-            padding: 0 30px;
-            background-image: linear-gradient(90deg, #4A6077, #0F1E32);
-            flex-shrink: 0;
+            height: 70px;
+            padding: 0 40px;
+            background-color: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
+
         .site_title {
-            color: white;
-            font-family: 'Renner*';
+            color: var(--text-main);
+            font-family: 'Renner*', sans-serif;
             font-weight: bold;
-            font-size: 1.5em;
+            font-size: 1.5rem;
             margin: 0;
+            letter-spacing: -0.02em;
         }
+
         .header-nav {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 30px;
         }
+
         .header-nav ul {
             display: flex;
             padding: 0;
             margin: 0;
-            gap: 25px;
+            gap: 30px;
         }
+
         .header-nav li {
             list-style: none;
-            margin-right: 0;
         }
+
         .header-nav li a {
-            color: #ffffff;
+            color: var(--text-sub);
             text-decoration: none;
-            font-size: 0.9em;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
         }
+
         .header-nav li a:hover {
-            opacity: 0.7;
+            color: var(--accent);
         }
 
         .header-login-btn {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-size: 0.9em;
-            font-weight: 500;
-            color: #4a6077;
-            background-color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background-color: var(--primary);
             border: none;
-            padding: 10px 18px;
-            border-radius: 5px;
+            padding: 10px 24px;
+            border-radius: var(--radius-pill);
             cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
+            transition: all 0.3s ease;
         }
+
         .header-login-btn:hover {
-            background-color: #f0f0f0;
+            background-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
         }
 
-        button {
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.2s;
-            padding: 10px 20px;
-            border-radius: 100px;
-            background: #FF780A;
-            border: 1px solid transparent;
-            display: flex;
-            align-items: center;
-            font-size: 15px;
-        }
-
-        button:hover {
-            background: #FF780A;
-        }
-
-        button > svg {
-            width: 34px;
-            margin-left: 10px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        button:hover svg {
-            transform: translateX(5px);
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        .site_title {
-            color: white;
-            font-family: 'Renner*';
-            font-weight: bold;
-        }
+        /* --- Main Visual --- */
         #main_visual {
             width: 100%;
-            height: 800px;
-            background-color: #ffffff;
+            height: 85vh;
+            background-color: var(--bg-body);
             position: relative;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         #main_visual img {
             position: absolute;
             top: 50%;
@@ -125,333 +138,443 @@
             width: auto;
             height: auto;
             max-width: 100%;
-            max-height: 100%;
-            
+            max-height: 90%;
             opacity: 0;
-            animation: crossfade 10s infinite; 
+            animation: crossfade 10s infinite;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.15));
         }
+
         #main_visual .techlog_img {
-            animation-delay: 6s;
+            animation-delay: 5s;
         }
 
         @keyframes crossfade {
-            0%   { opacity: 0; }
-            25%  { opacity: 1; }
-            50%  { opacity: 1; }
-            75%  { opacity: 0; }
+            0%   { opacity: 0; transform: translate(-50%, -48%); }
+            10%  { opacity: 1; transform: translate(-50%, -50%); }
+            45%  { opacity: 1; transform: translate(-50%, -50%); }
+            55%  { opacity: 0; transform: translate(-50%, -52%); }
             100% { opacity: 0; }
         }
+
         .container {
             width: 100%;
-            max-width: 1440px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 60px 40px 100px;
+            padding: 100px 20px;
             box-sizing: border-box;
         }
 
+        /* --- Hero / Concept --- */
         .hero-section {
             text-align: center;
             position: relative;
-            padding: 40px 0;
-            max-width: 900px;
-            margin: 0 auto 80px auto;
+            padding: 60px 0;
+            max-width: 800px;
+            margin: 0 auto 120px auto;
         }
 
         .hero-image {
             position: absolute;
-            width: 300px;
+            width: 280px;
             height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+            transition: transform 0.5s ease;
         }
 
-        .hero-image.left {
-            top: 0;
-            left: -250px;
-
-        }
-
-        .hero-image.right {
-            top: 20px;
-            right: -250px;
-        }
+        .hero-image.left { top: -20px; left: -220px; }
+        .hero-image.right { top: 40px; right: -220px; }
+        
 
         .hero-section h1 {
-            font-size: 36px; /* 40px */
-            font-weight: bold;
-            margin-bottom: 50px;
-            line-height: 1.5;
-            color: #000000;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            line-height: 1.3;
+            color: var(--text-main);
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #1D1D1F 0%, #434344 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-section p {
-            font-size: 20px;
-            max-width: 900px;
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            max-width: 800px;
             margin: 0 auto;
+            line-height: 1.9;
         }
 
+        /* --- Features --- */
         .features-section {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
+            align-items: flex-start;
             width: 100%;
             margin-top: 40px;
-            align-items: center;
         }
 
         .feature-item {
             flex: 1;
             text-align: center;
-            width: 380px;
-            height: 380px;
+            padding: 40px 20px;
+            background: var(--bg-section);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            min-height: 320px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
         }
 
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
         .feature-item .number {
-            font-family: 'Renner*';
+            font-family: 'Renner*', sans-serif;
             font-weight: bold;
-            font-size: 48px;
+            font-size: 2rem;
             color: #000000;
             margin-bottom: 20px;
         }
 
         .feature-item img {
-            width: 60px;
+            width: 64px;
             height: auto;
-            display: inline-block;
-        }
-
-        .feature-item h3 {
-            font-size: 20px;
-            font-weight: bold;
             margin-bottom: 20px;
         }
 
-        .feature-item p {
-            font-size: 16px;
-            color: #000000;
-            font-weight: regular;
+        .feature-item h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-main);
         }
+
+        .feature-item p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            line-height: 1.7;
+        }
+
         .feature-separator {
             flex-shrink: 0;
-            padding: 0 20px;
-        }
-        #start {
-            background-color: #4A6077;
-            padding: 80px 20px;
-            color: white;
-            box-sizing: border-box;
-        }
-        #start h2 {
-             font-size: 36px;
-             margin: 0;
-             margin-bottom: 70px;
-             font-weight: bold;
-             text-align: center;
+            padding: 150px 10px 0;
+            opacity: 0.2;
         }
         
+        .feature-separator svg path {
+            fill: var(--text-main);
+        }
+
+        /* --- Start Steps --- */
+        #start {
+            background-color: #1D1D1F;
+            padding: 120px 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #start h2 {
+            font-size: 2.5rem;
+            margin: 0 0 80px 0;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+
         .start_steps_container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 70px;
-            max-width: 1000px;
+            gap: 100px;
+            max-width: 900px;
             margin: 0 auto;
         }
-        
+
         .step_item {
             width: 100%;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
         }
         
+        .step_item:nth-child(1) { animation-delay: 0.1s; }
+        .step_item:nth-child(2) { animation-delay: 0.3s; }
+        .step_item:nth-child(3) { animation-delay: 0.5s; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .step_header {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 20px;
+            margin-bottom: 30px;
         }
+
         .step_number {
-            background-color: #ffffff;
-            color: #000000;
+            background: linear-gradient(135deg, #3A3A3C, #1C1C1E);
+            color: #fff;
+            border: 1px solid #48484A;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-weight: bold;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.2;
             flex-shrink: 0;
-            opacity: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .step_number span:first-child {
-            font-size: 12px;
-        }
-        .step_number span:last-child {
-            font-size: 24px;
-        }
+
+        .step_number span:first-child { font-size: 10px; color: #86868B; letter-spacing: 1px;}
+        .step_number span:last-child { font-size: 28px; font-weight: 700; font-family: 'Renner*'; }
+
         .step_title {
-            font-size: 28px;
-            font-weight: bold;
+            font-size: 1.8rem;
+            font-weight: 700;
             color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+
+        .step_images_wrapper {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .step_image {
+            width: 80%;
+            flex: 1;
+            height: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            /* ★変更点: box-shadowのtransitionも追加 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            object-fit: contain;
+            cursor: pointer; /* カーソルをポインターに変更 */
         }
         
-        .step_image {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* ★変更点: 画像そのものにホバーした時のスタイル */
+        .step_image:hover {
+            transform: scale(1.03); /* 少し拡大 */
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); /* 影を深くして浮き上がり感を強調 */
+            z-index: 10; /* 重なっている場合に手前に表示 */
         }
+
+        /* --- Login Area --- */
         #login {
             display: flex;
             justify-content: center;
-            text-align: center;
-            padding-top: 50px;
-            padding-bottom: 50px;
+            align-items: center;
+            padding: 120px 20px;
+            background-color: var(--bg-body);
+        }
 
-        }
-        #login-btn-center{
+        button#login-btn-center {
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            padding: 16px 40px;
+            border-radius: var(--radius-pill);
+            background: var(--primary);
             color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-family: 'Inter', sans-serif;
         }
+
+        button#login-btn-center:hover {
+            background: var(--text-main);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        button#login-btn-center:active {
+            transform: scale(0.98);
+        }
+
+        button#login-btn-center > svg {
+            width: 28px;
+            height: 28px;
+            margin-left: 12px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button#login-btn-center:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* --- Footer --- */
         #footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin: 0 auto;
-            height: 80px;
-            /* width: 100%; */
-            padding: 0 30px;
-            background-image: linear-gradient(90deg, #4A6077, #0F1E32);
-            text-decoration: none;
+            padding: 40px;
+            background-color: #FFFFFF;
+            border-top: 1px solid #E5E5EA;
         }
+
+        #footer .site_title {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
         #footer ul {
             display: flex;
-            padding: 10px 0;
+            padding: 0;
+            margin: 0;
         }
+
         #footer li {
-            margin-right:  30px;
+            margin-left: 30px;
+            margin-right: 0;
             list-style: none;
         }
-        #footer li a {
-            color: #ffffff;
-        }
-        #footer li a:hover {
-            opacity: 0.7;
-        }
-        @media (max-width: 768px) {
-            #header {
-                padding: 0.8em 1em;
-                height: auto;
-            }
-            .site_title {
-                font-size: 1.2em;
-            }
-            .header-nav {
-                font-size: 0.8em;
-                gap: 10px;
-            }
-            .header-nav ul {
-                gap: 15px;
-            }
-            .header-login-btn {
-                font-size: 1em;
-                padding: 8px 12px;
-            }
-            #main_visual {
-                height: 50vh;
-            }
-            .container {
-                padding: 40px 20px;
-            }
-            .hero-section {
-                padding: 20px 0;
-                margin-bottom: 40px;
-            }
-            .hero-section h1 {
-                font-size: 14px;
-                margin-bottom: 30px;
-            }
-            .hero-section p {
-                font-size: 16px;
-            }
-            .hero-image {
-                display: none;
-            }
 
+        #footer li a {
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        #footer li a:hover {
+            color: var(--primary);
+        }
+
+        /* --- Responsive Design (Updated) --- */
+        
+        /* Tablet & Small Desktop (Max 900px) */
+        @media (max-width: 900px) {
+            .hero-image {
+                opacity: 0.05; 
+                z-index: -1;
+            }
+            .hero-section h1 { 
+                font-size: 2.2rem; 
+            }
+            
             .features-section {
                 flex-direction: column;
                 gap: 30px;
             }
-            .feature-separator {
-                display: none;
-            }
+            .feature-separator { display: none; }
             .feature-item {
-                width: 100%;
-                height: auto;
-                border-top: 2px solid #4A6077;
-                padding: 30px 0;
+                width: 100%; 
+                box-sizing: border-box; 
+                min-height: auto;
             }
-            .feature-item:first-child {
-                border-top: none;
+            .header-nav ul { display: none; }
+            
+            #start h2 { font-size: 2rem; }
+            .step_header { justify-content: center; }
+            .step_title { font-size: 1.4rem; }
+        }
+
+        /* Smartphone (Max 480px) */
+        @media (max-width: 480px) {
+            #header { 
+                padding: 0 20px; 
+                height: 60px;
             }
-            .feature-item .number {
-                font-size: 40px;
-            }
-            .feature-item h3 {
-                font-size: 18px;
-            }
-            #start {
-                height: auto;
+            .site_title { font-size: 1.3rem; }
+            
+            .container {
                 padding: 60px 20px;
             }
+
+            .hero-section {
+                margin-bottom: 60px;
+            }
+            .hero-section h1 { 
+                font-size: 1.5rem; 
+                line-height: 1.4;
+                margin-bottom: 24px;
+            }
+            
+            .hero-section p { 
+                font-size: 0.9rem;
+                line-height: 1.8;
+                text-align: left;
+            }
+            .hero-section p br {
+                display: none;
+            }
+
+            .hero-image {
+                display: none;
+            }
+
+            .feature-item {
+                padding: 30px 20px;
+            }
+            .feature-item h3 {
+                font-size: 1.1rem;
+            }
+
+            #start {
+                padding: 80px 20px;
+            }
             #start h2 {
-                font-size: 28px;
                 margin-bottom: 50px;
+                font-size: 1.8rem;
             }
             .start_steps_container {
                 gap: 50px;
             }
+            
+            .step_number { width: 50px; height: 50px; }
+            .step_number span:first-child { font-size: 9px; }
+            .step_number span:last-child { font-size: 18px; }
+            
+            .step_title { 
+                font-size: 1.25rem; 
+            }
             .step_header {
                 gap: 15px;
-                margin-bottom: 15px;
-                align-items: center;
-                justify-content: center;
+                margin-bottom: 20px;
             }
-            .step_number {
-                width: 40px;
-                height: 40px;
-            }
-            .step_number span:first-child {
-                font-size: 8px;
-            }
-            .step_number span:last-child {
-                font-size: 16px;
-            }
-            .step_title {
-                font-size: 16px;
-            }
-            #login {
-                height: auto;
-                padding: 60px 20px;
-            }
-            #footer {
+
+            .step_images_wrapper {
                 flex-direction: column;
-                height: auto;
-                padding: 30px 20px;
                 gap: 20px;
             }
-            #footer nav ul {
-                flex-direction: column;
-                padding: 0;
-                margin: 0;
-                align-items: center;
-                gap: 15px;
+
+            #login {
+                padding: 80px 20px;
             }
-            #footer li {
-                margin-right: 0;
+            button#login-btn-center { 
+                width: 100%; 
+                justify-content: center;
+                font-size: 1rem;
+                padding: 14px 20px;
+            }
+
+            #footer { 
+                flex-direction: column; 
+                gap: 20px; 
+                text-align: center;
+                padding: 30px 20px;
+            }
+            #footer li { margin: 5px 0; }
+            #footer ul {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -467,18 +590,19 @@
             <button id="login-btn-header" class="header-login-btn">ログイン</button>
         </nav>
     </header>
+
     <div id="main_visual">
         <img src="{{ url_for('static', filename='img/main1.png') }}" alt="履歴一覧" class="log_img">
         <img src="{{ url_for('static', filename='img/main2.png') }}" alt="サービス画像" class="techlog_img">
-
     </div>
+
     <div class="container">
         <section class="hero-section" id="concept">
             <img src="{{ url_for('static', filename='img/pc_illust.png') }}" alt="PCを使う女の子" class="hero-image right">
             <img src="{{ url_for('static', filename='img/smartphone_illust.png') }}" alt="スマホを使う女の子" class="hero-image left">
 
             <h1>
-                「後で読もう」と思ったあの技術記事<br>
+                「後で読もう」と思った技術記事<br>
                 情報の海で見失っていませんか？
             </h1>
             <p>
@@ -491,54 +615,57 @@
         </section>
 
         <section class="features-section">
-            
             <div class="feature-item">
                 <div class="number">01</div>
                 <img src="{{ url_for('static', filename='img/log.png') }}" alt="ログアイコン" class="log_icon">
-                <h3>大量の閲覧履歴</h3>
+                <h3>埋もれる履歴</h3>
                 <p>
-                    1日の閲覧履歴が多すぎて情報が<br>
-                    どこで見たのかわからない
+                    膨大な履歴の中から<br>
+                    重要な技術情報だけを見つけ出すのは<br>
+                    困難です。
                 </p>
             </div>
 
             <div class="feature-separator">
-                <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.7746 0H0L25.6338 35L0 70H15.7746L42.3944 35L15.7746 0Z" fill="#000000"/>
-                <path d="M43.3801 0H27.6055L53.2393 35L27.6055 70H43.3801L69.9998 35L43.3801 0Z" fill="#000000"/>
+                <svg width="40" height="40" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.7746 0H0L25.6338 35L0 70H15.7746L42.3944 35L15.7746 0Z"/>
+                    <path d="M43.3801 0H27.6055L53.2393 35L27.6055 70H43.3801L69.9998 35L43.3801 0Z"/>
                 </svg>
             </div>
 
             <div class="feature-item">
                 <div class="number">02</div>
-                <img src="{{ url_for('static', filename='img/robot.png') }}" alt="フィルターアイコン" class="filter_icon">
-                <h3>AIが履歴の整理をする</h3>
+                <img src="{{ url_for('static', filename='img/robot.png') }}" alt="AIアイコン" class="filter_icon">
+                <h3>AIによる自動整理</h3>
                 <p>
-                    フィルタリングと要約で<br>
-                    必要な情報のみに整理する
+                    高度なフィルタリングと要約機能で<br>
+                    あなたにとって本当に必要な情報だけを<br>
+                    抽出します。
                 </p>
             </div>
 
             <div class="feature-separator">
-                <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.7746 0H0L25.6338 35L0 70H15.7746L42.3944 35L15.7746 0Z" fill="#000000"/>
-                <path d="M43.3801 0H27.6055L53.2393 35L27.6055 70H43.3801L69.9998 35L43.3801 0Z" fill="#000000"/>
+                <svg width="40" height="40" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.7746 0H0L25.6338 35L0 70H15.7746L42.3944 35L15.7746 0Z"/>
+                    <path d="M43.3801 0H27.6055L53.2393 35L27.6055 70H43.3801L69.9998 35L43.3801 0Z"/>
                 </svg>
             </div>
 
             <div class="feature-item">
                 <div class="number">03</div>
                 <img src="{{ url_for('static', filename='img/pen.png') }}" alt="ペンアイコン" class="pen_icon">
-                <h3>簡単に振り返る</h3>
+                <h3>知識の定着</h3>
                 <p>
-                    それぞれのサイトを振り返り、<br>
-                    知識として定着させる
+                    要約された情報を振り返り、<br>
+                    コメントを残すことで<br>
+                    一過性の情報を知識として定着させます。
                 </p>
             </div>
         </section>
     </div>
+
     <div id="start">
-        <h2>使い方</h2>
+        <h2>How to Use</h2>
         <div class="start_steps_container">
             <div class="step_item">
                 <div class="step_header">
@@ -546,9 +673,12 @@
                         <span>STEP</span>
                         <span>01</span>
                     </div>
-                    <span class="step_title">Chromeストアでダウンロード</span>
+                    <span class="step_title">Chromeストアで追加</span>
                 </div>
-                <img src="{{ url_for('static', filename='img/use1.png') }}" alt="使い方1" class="step_image">
+                <div class="step_images_wrapper">
+                    <img src="{{ url_for('static', filename='img/use1.png') }}" alt="使い方1" class="step_image">
+                    <img src="{{ url_for('static', filename='img/use2.png') }}" alt="使い方2" class="step_image">
+                </div>
             </div>
             <div class="step_item">
                 <div class="step_header">
@@ -556,9 +686,12 @@
                         <span>STEP</span>
                         <span>02</span>
                     </div>
-                    <span class="step_title">拡張機能を有効にする</span>
+                    <span class="step_title">拡張機能を有効化</span>
                 </div>
-                <img src="{{ url_for('static', filename='img/use2.png') }}" alt="使い方2" class="step_image">
+                <div class="step_images_wrapper">
+                    <img src="{{ url_for('static', filename='img/use3.png') }}" alt="使い方3" class="step_image">
+                    <img src="{{ url_for('static', filename='img/roading.png') }}" alt="ローディング" class="step_image">
+                </div>
             </div>
             <div class="step_item">
                 <div class="step_header">
@@ -566,30 +699,26 @@
                         <span>STEP</span>
                         <span>03</span>
                     </div>
-                    <span class="step_title">サイトの印象や感じたことを入力</span>
+                    <span class="step_title">学びを振り返る</span>
                 </div>
-                <img src="{{ url_for('static', filename='img/techlog_hurikaeri.png') }}" alt="使い方2" class="step_image">
+                <div class="step_images_wrapper">
+                    <img src="{{ url_for('static', filename='img/refrect.png') }}" alt="振り返り" class="step_image">
+                    <img src="{{ url_for('static', filename='img/dashboard.png') }}" alt="一覧" class="step_image">
+                </div>
             </div>
         </div>
     </div>
+
     <div id="login">
         <button id="login-btn-center">
-            <span>Googleアカウントでログイン</span>
-            <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 74 74"
-            height="34"
-            width="34"
-            >
-            <circle stroke-width="3" stroke="white" r="35.5" cy="37" cx="37"></circle>
-            <path
-                fill="white"
-                d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"
-            ></path>
+            <span>Googleアカウントで始める</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 74 74">
+                <circle stroke-width="3" stroke="white" r="35.5" cy="37" cx="37"></circle>
+                <path fill="white" d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"></path>
             </svg>
         </button>
     </div>
+
     <footer id="footer">
         <h1 class="site_title">Tech Log</h1>
         <nav>
@@ -623,9 +752,7 @@
                     return user.getIdToken();
                 })
                 .then((idToken) => {
-                    // Cookieの有効期限を1時間に設定
                     document.cookie = `firebaseToken=${idToken}; path=/; max-age=3600`;
-                    // ログイン後はダッシュボードに遷移
                     window.location.href = '/';
                 })
                 .catch((error) => {
