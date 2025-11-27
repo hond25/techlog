@@ -321,6 +321,7 @@ def dashboard():
     user_id = g.user_id
     tag_filter = request.args.get('filter')
     keyword_query = request.args.get('q')
+    search_type = request.args.get('search_type', 'all')  # ★追加: 検索タイプを取得
 
     try:
         recommended_articles = []
@@ -362,21 +363,47 @@ def dashboard():
             
             if keyword_query:
                 keyword_lower = keyword_query.lower()
+                is_match = False
 
-                search_corpus = ""
-                search_corpus += article_data.get('generatedTitle', '').lower()
-                search_corpus += article_data.get('originalTitle', '').lower()
-                search_corpus += article_data.get('summary', '').lower()
+                gen_title = article_data.get('generatedTitle', '').lower()
+                orig_title = article_data.get('originalTitle', '').lower()
+                summary = article_data.get('summary', '').lower()
+                tags = [t.lower() for t in article_data.get('tags', [])]
 
+                reflection_text = ""
                 if 'reflection' in article_data and isinstance(article_data['reflection'], dict):
-                    reflection_data = article_data['reflection']
-                    search_corpus += reflection_data.get('specific_impression', '').lower()
-                    search_corpus += reflection_data.get('why_important', '').lower()
-                    search_corpus += reflection_data.get('what_i_got', '').lower()
-                    search_corpus += reflection_data.get('memo', '').lower()
+                    r = article_data['reflection']
+                    reflection_text += r.get('specific_impression', '').lower()
+                    reflection_text += r.get('why_important', '').lower()
+                    reflection_text += r.get('what_i_got', '').lower()
+                    reflection_text += r.get('memo', '').lower()
 
-                if keyword_lower not in search_corpus:
-                    continue 
+                if search_type == 'tag':
+                    for tag in tags:
+                        if keyword_lower in tag:
+                            is_match = True
+                            break
+                
+                elif search_type == 'title':
+                    if (keyword_lower in gen_title) or (keyword_lower in orig_title):
+                        is_match = True
+
+                elif search_type == 'reflection':
+                    if keyword_lower in reflection_text:
+                        is_match = True
+
+                else:
+                    search_corpus = gen_title + orig_title + summary + reflection_text
+                    if keyword_lower in search_corpus:
+                        is_match = True
+                    else:
+                        for tag in tags:
+                            if keyword_lower in tag:
+                                is_match = True
+                                break
+
+                if not is_match:
+                    continue
 
             article_data['id'] = doc.id
             if 'createdAt' in article_data and article_data['createdAt']:
@@ -391,7 +418,8 @@ def dashboard():
                                articles=articles,
                                recommended_articles=recommended_articles,
                                current_filter=tag_filter,
-                               keyword_query=keyword_query)
+                               keyword_query=keyword_query,
+                               search_type=search_type)
 
     except Exception as e:
         print(f"❌ データ取得エラー: {e}")

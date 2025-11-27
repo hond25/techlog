@@ -2,49 +2,113 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Tech Log</title>
+    <title>Tech Log - ダッシュボード</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://indestructibletype-fonthosting.github.io/renner.css" type="text/css" charset="utf-8" />
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            margin: 0;
-            background-color: #f8f9fa;
+        /* --- Design System from login.html --- */
+        :root {
+            --primary: #000000;
+            --accent: #0066CC;
+            --bg-body: #FBFBFD;
+            --bg-section: #FFFFFF;
+            --text-main: #1D1D1F;
+            --text-sub: #86868B;
+            --glass: rgba(255, 255, 255, 0.8);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --radius-lg: 24px;
+            --radius-pill: 100px;
         }
-        header {
-            background-color: #4a6077;
-            padding: 1em 2em;
+
+        body {
+            font-family: 'Jost', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        /* --- Header Styles --- */
+        #header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 70px;
+            padding: 0 40px;
+            background-color: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
-        header h1 {
+
+        .site_title {
+            color: var(--text-main);
+            font-family: 'Renner*', sans-serif;
+            font-weight: bold;
+            font-size: 1.5rem;
             margin: 0;
-            font-size: 1.5em;
-            color: #ffffff;
+            letter-spacing: -0.02em;
         }
-        header h1 a {
-            color: #ffffff;
+
+        .site_title a {
+            color: var(--text-main);
             text-decoration: none;
+            transition: color 0.3s;
         }
+        
+        .site_title a:hover {
+            color: var(--accent);
+        }
+
         .user-info {
             font-size: 0.9em;
-            color: #ffffff;
+            color: var(--text-sub);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+            font-weight: 500;
         }
+        
+        .user-info strong {
+            color: var(--text-main);
+        }
+
         #logout-btn {
-             fill: #FFFFFF;
+             fill: var(--text-main);
              cursor: pointer;
+             transition: all 0.3s ease;
+             padding: 8px;
+             border-radius: 50%;
+             background-color: transparent;
         }
+
         #logout-btn:hover {
-            fill: #bdbdbd;
+            fill: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.1);
+            transform: rotate(90deg);
         }
+
+        /* --- Breadcrumbs --- */
         .breadcrumbs {
-            padding: 12px 2em;
-            font-size: 0.6em;
+            padding: 12px 40px;
+            font-size: 0.85rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .breadcrumbs ul {
             display: flex;
@@ -56,21 +120,23 @@
         .breadcrumbs li::after {
             content: '>';
             margin: 0 0.6em;
-            color: #6c757d;
+            color: var(--text-sub);
         }
         .breadcrumbs li:last-child::after {
             content: '';
         }
         .breadcrumbs a {
             text-decoration: none;
-            color: #000000;
+            color: var(--text-sub);
+            transition: color 0.2s;
         }
         .breadcrumbs a:hover {
             text-decoration: underline;
+            color: var(--accent);
         }
         .breadcrumbs li:last-child {
-            color: #343a40;
-            font-weight: 500;
+            color: var(--text-main);
+            font-weight: 600;
         }
 
         .container {
@@ -78,269 +144,11 @@
             margin: 1.5em auto;
             padding: 0 1.5em;
             display: block;
-            position: relative; /* Absolute positioning reference */
-            padding-top: 1em;   /* Space for the button */
-        }
-
-        .update-button-container {
-            position: absolute; /* Position relative to .container */
-            top: 2.4em;         /* Adjust top position */
-            right: 1.5em;       /* Align to the right padding of container */
-            margin-bottom: 0;
-            z-index: 10;        /* Keep button above other elements */
-        }
-
-        .recommendation-section {
-            margin-bottom: 3em;
-            /* position: relative; Removed */
-            /* padding-top: 3.5em; Removed */
-        }
-
-        .section-header {
-            display: flex; /* Keep title and (potential future elements) aligned */
-            justify-content: space-between; /* Align items at ends */
-            align-items: baseline; /* Align text baselines */
-            margin-bottom: 1em; /* Space below the header */
-            /* position: absolute; Removed */
-            /* top: 0; Removed */
-            /* left: 1.5em; Removed */
-        }
-        .section-header .section-title {
-             margin-bottom: 0;
-             border-bottom: none;
-             padding-bottom: 0;
-        }
-        .recommendation-section .section-header .section-title {
-             color: #c88f04;
-        }
-
-        /* Adjust margin for the grid inside recommendation section if needed */
-        .recommendation-section .article-grid {
-            margin-top: 0;
-        }
-
-        #update-recommendations-btn {
-            padding: 6px 10px;
-            font-size: 0.9em;
-            background-color: #e9ecef;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #343a40;
-            flex-shrink: 0;
-        }
-        #update-recommendations-btn:hover {
-            background-color: #d4dae0;
-        }
-        #update-recommendations-btn:disabled {
-            background-color: #f8f9fa;
-            cursor: wait;
-            opacity: 0.7;
-        }
-        #update-recommendations-btn svg {
-            fill: #343a40;
-        }
-
-        /* General style for section titles (like "すべての技術記事") */
-        h2.section-title {
-             margin-bottom: 1em;
-             border-bottom: 2px solid #e9ecef;
-             padding-bottom: 0.5em;
-             display: block;
-             font-size: 1.5em;
-             color: #343a40;
-        }
-
-        .article-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5em;
-        }
-
-        .article {
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: box-shadow 0.2s;
-            text-decoration: none;
-        }
-        .article:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .article-image {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-        }
-        .article-content {
-            padding: 1.2em;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        .article-content h3 {
-            margin-top: 0;
-            font-size: 1em;
-            line-height: 1.4;
-            flex-grow: 1;
-            color: #333;
-        }
-        .article-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-            padding-top: 0.8em;
-        }
-        .tags {
-            margin-top: 0;
-            padding-top: 0;
-            flex-grow: 1;
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .delete-btn {
-            background-color: #e74c3c;
-            border: 1px solid #e74c3c;
-            padding: 5px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8em;
-            flex-shrink: 0;
-            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-            color: #ffffff;
-        }
-        
-        .delete-btn svg {
-            fill: currentColor;
-        }
-
-        .delete-btn:hover {
-            background-color: #ffffff;
-            border-color: #e74c3c;
-            color: #e74c3c;
-        }
-        .article-date {
-            font-size: 0.8em;
-            color: #6c757d;
-            margin-bottom: 0.6em;
-            margin-top: 0;
-        }
-        .tags span {
-            display: inline-block;
-            background-color: #e9ecef;
-            color: #495057;
-            padding: 0.4em 0.8em;
-            border-radius: 12px;
-            font-size: 0.75em;
-            margin-right: 6px;
-            margin-bottom: 6px;
-        }
-        .no-articles {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: #6c757d;
-            padding: 3em;
-            background-color: #fff;
-            border-radius: 8px;
-        }
-        .article-actions {
-            display: flex;
-            flex-shrink: 0;
-        }
-        .tier-badge {
-            padding: 6px 10px;
-            font-size: 0.75em;
-            font-weight: bold;
-            color: white;
-            border-radius: 5px;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-            flex-shrink: 0;
-            margin-bottom: 0.8em;
-            align-self: flex-start;
-        }
-        .tier-s {
-            background-color: #ff6f61;
-        }
-        .tier-a {
-            background-color: #ffb74d;
-        }
-        .tier-b {
-            background-color: #4db6ac;
-        }
-        .tier-c {
-            background-color: #64b5f6;
-        }
-        .tier-d {
-            background-color: #9575cd;
-        }
-
-        /* Specific styles for recommended articles */
-        .recommendation-section .article {
             position: relative;
+            padding-top: 1em;
         }
 
-        .recommendation-section .article::before {
-            content: "★";
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(255, 193, 7, 0.9);
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 4px;
-            z-index: 10;
-            line-height: 1;
-        }
-
-        .read-later-btn {
-            background-color: rgb(210, 210, 210);
-            border-color: rgb(210, 210, 210);
-            color: #ffffff;
-            border: 1px solid;
-            padding: 5px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-            display: flex;
-            align-items: center;
-            margin-right: 8px;
-        }
-        .read-later-btn svg {
-             fill: currentColor;
-        }
-        .read-later-btn:hover {
-            background-color: rgb(255, 210, 75);
-            color: #ffffff;
-        }
-        
-        .read-later-btn.active {
-            background-color: rgb(255, 210, 75);
-            border-color: rgb(255, 210, 75);
-            color: #ffffff;
-        }
-        .read-later-btn.active svg {
-             fill: #ffffff;
-        }
-        
-        .read-later-btn.active:hover {
-            background-color: rgb(210, 210, 210);
-            border-color: rgb(210, 210, 210);
-            color: #ffffff;
-        }
-        .read-later-btn.active:hover svg {
-            fill: #ffffff
-        }
+        /* --- Search Box Styling (Updated) --- */
         .search-container {
             max-width: 1200px;
             margin: 0 auto 1.5em auto;
@@ -349,92 +157,423 @@
         .search-form {
             display: flex;
             width: 100%;
+            box-shadow: var(--shadow-sm);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
         }
-        .search-input-wrapper {
-            position: relative; /* アイコンを絶対配置するための基準 */
-            flex-grow: 1; /* 幅いっぱいに広がる */
-            display: flex; /* 中のinputを100%幅にするため */
+        
+        /* 検索タイプ選択プルダウン */
+        .search-select-wrapper {
+            position: relative;
+            border-right: 1px solid #E5E5EA;
+            display: flex;
+            align-items: center;
+            background-color: #FAFAFC;
         }
-        .search-icon {
-            position: absolute; /* アイコンを絶対配置 */
-            top: 50%;
-            left: 12px; /* 左からの位置 */
-            transform: translateY(-50%); /* 垂直方向の中央揃え */
-            width: 20px; /* アイコンのサイズを調整 */
-            height: 20px;
-            fill: #999; /* アイコンの色をplaceholder風に */
-            pointer-events: none; /* アイコンがクリックを妨げないように */
-        }
-        .search-form input[type="search"] {
-            width: 100%; /* 親要素いっぱいに広がる */
-            padding: 12px 15px 12px 45px; /* 左側にアイコン分のスペース(45px)を確保 */
-            font-size: 1em;
-            border: 1px solid #ced4da;
-            border-radius: 5px 0 0 5px;
-            box-sizing: border-box;
-        }
-        .search-form button {
-            padding: 0 20px;
-            font-size: 1em;
-            background-color: #4a6077;
-            color: white;
-            border: 1px solid #4a6077;
-            border-radius: 0 5px 5px 0; /* 左側は入力欄と連結 */
+        
+        .search-select {
+            appearance: none;
+            -webkit-appearance: none;
+            border: none;
+            background: transparent;
+            padding: 0 15px 0 20px;
+            height: 100%;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-main);
             cursor: pointer;
+            outline: none;
+            min-width: 100px;
+            font-family: 'Noto Sans JP', sans-serif;
         }
+        
+        .search-select:hover {
+            background-color: #F0F0F5;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            background: white;
+            align-items: center;
+        }
+        
+        /* アイコンの位置調整 */
+        .search-icon {
+            margin-left: 16px;
+            width: 18px;
+            height: 18px;
+            fill: var(--text-sub);
+            flex-shrink: 0;
+        }
+        
+        .search-form input[type="search"] {
+            width: 100%;
+            padding: 16px 20px 16px 12px; /* アイコン分の余白を調整 */
+            font-size: 1em;
+            border: none;
+            background: white;
+            color: var(--text-main);
+            outline: none;
+        }
+        
+        .search-form button {
+            padding: 0 30px;
+            font-size: 1em;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s;
+        }
+        .search-form button:hover {
+            background-color: var(--text-main);
+        }
+
+        /* --- Recommendations & Update Button --- */
+        .update-button-container {
+            position: absolute;
+            top: 2.4em;
+            right: 1.5em;
+            margin-bottom: 0;
+            z-index: 10;
+        }
+
+        .recommendation-section {
+            margin-bottom: 3em;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1em;
+        }
+        .section-header .section-title {
+             margin-bottom: 0;
+             border-bottom: none;
+             padding-bottom: 0;
+        }
+        .recommendation-section .section-header .section-title {
+             color: #D97706; 
+        }
+
+        .recommendation-section .article-grid {
+            margin-top: 0;
+        }
+
+        #update-recommendations-btn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            background-color: white;
+            color: var(--text-main);
+            border: 1px solid #E5E5EA;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+        #update-recommendations-btn:hover {
+            background-color: #F5F5F7;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #update-recommendations-btn:disabled {
+            background-color: #f8f9fa;
+            cursor: wait;
+            opacity: 0.7;
+            transform: none;
+        }
+        #update-recommendations-btn svg {
+            fill: var(--text-main);
+        }
+
+        h2.section-title {
+             margin-bottom: 1em;
+             border-bottom: 2px solid #E5E5EA;
+             padding-bottom: 0.5em;
+             display: block;
+             font-size: 1.5em;
+             color: var(--text-main);
+             font-weight: 700;
+             letter-spacing: -0.01em;
+        }
+
+        /* --- Article Grid & Card --- */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5em;
+        }
+
+        .article {
+            background-color: #fff;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .article:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+        .article-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .article-content {
+            padding: 1.5em;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .article-content h3 {
+            margin-top: 0;
+            font-size: 1.1em;
+            line-height: 1.5;
+            flex-grow: 1;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1em;
+        }
+        
+        /* --- Tags Styling (Updated for Links) --- */
+        .tags {
+            margin-top: 0;
+            padding-top: 0;
+            flex-grow: 1;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .tag-link {
+            display: inline-block;
+            background-color: #F5F5F7;
+            color: var(--text-sub);
+            padding: 0.3em 0.8em;
+            border-radius: 6px;
+            font-size: 0.75em;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .tag-link:hover {
+            background-color: #E5E5EA;
+            color: var(--primary);
+            border-color: #D1D1D6;
+        }
+        
+        /* Actions */
+        .delete-btn {
+            background-color: white;
+            border: 1px solid #ff3b30;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            color: #ff3b30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .delete-btn svg {
+            fill: currentColor;
+            width: 16px;
+            height: 16px;
+        }
+
+        .delete-btn:hover {
+            background-color: #ff3b30;
+            color: #ffffff;
+        }
+        
+        .article-date {
+            font-size: 0.8em;
+            color: var(--text-sub);
+            margin-bottom: 0.8em;
+            margin-top: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .no-articles {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-sub);
+            padding: 4em;
+            background-color: #fff;
+            border-radius: 16px;
+            border: 1px dashed #E5E5EA;
+        }
+        .article-actions {
+            display: flex;
+            flex-shrink: 0;
+            gap: 8px;
+        }
+        .tier-badge {
+            padding: 4px 10px;
+            font-size: 0.7em;
+            font-weight: 700;
+            color: white;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-bottom: 0.8em;
+            align-self: flex-start;
+            font-family: 'Inter', sans-serif;
+        }
+        .tier-s { background-color: #FF2D55; }
+        .tier-a { background-color: #FF9500; }
+        .tier-b { background-color: #34C759; }
+        .tier-c { background-color: #007AFF; }
+        .tier-d { background-color: #AF52DE; }
+
+        .recommendation-section .article {
+            position: relative;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .recommendation-section .article::before {
+            content: "★ Recommended";
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: rgba(255, 255, 255, 0.95);
+            color: #D97706;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 100px;
+            z-index: 10;
+            line-height: 1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .read-later-btn {
+            background-color: white;
+            border: 1px solid #C7C7CC;
+            color: #C7C7CC;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        .read-later-btn svg {
+             fill: currentColor;
+             width: 16px;
+             height: 16px;
+        }
+        .read-later-btn:hover {
+            border-color: #FF9500;
+            color: #FF9500;
+        }
+        
+        .read-later-btn.active {
+            background-color: #FF9500;
+            border-color: #FF9500;
+            color: #ffffff;
+        }
+        .read-later-btn.active svg {
+             fill: #ffffff;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 992px) {
             .article-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {
-            header {
-                padding: 0.8em 1em;
+            #header {
+                padding: 0 20px;
+                height: 60px;
             }
-            header h1 {
-                font-size: 1.2em;
+            .site_title {
+                font-size: 1.3rem;
             }
             .user-info {
                 font-size: 0.8em;
                 gap: 10px;
             }
             .user-info span {
-                max-width: 5em;
+                max-width: 80px;
                 display: inline-block;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
-                vertical-align: middle;
             }
             .article-grid { grid-template-columns: 1fr; }
             .container {
-                padding-top: 5em; /* Adjust top padding for button on mobile */
+                padding-top: 4em;
                 margin-top: 0;
-                padding-left: 1em; /* Reduce side padding on mobile */
+                padding-left: 1em;
                 padding-right: 1em;
             }
             .update-button-container {
-                 top: 1em; /* Adjust button position on mobile */
+                 top: 0.5em;
                  right: 1em;
             }
             .section-header {
-                flex-direction: column; /* Stack title and (potential) button on mobile */
+                flex-direction: column;
                 align-items: flex-start;
                 gap: 0.8em;
             }
-             /* Since button is positioned absolutely, no need to reset align-self here */
             .breadcrumbs {
-                padding: 12px 1em; /* Reduce breadcrumb padding on mobile */
+                padding: 12px 20px;
             }
-            header {
-                padding: 0.8em 1em; /* Reduce header padding on mobile */
+            /* スマホでの検索バー調整 */
+            .search-select {
+                min-width: 70px;
+                padding: 0 10px;
+                font-size: 0.8em;
+            }
+            .search-form input[type="search"] {
+                font-size: 0.9em;
+                padding-left: 8px;
+            }
+            .search-form button {
+                padding: 0 16px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1><a href="{{ url_for('dashboard') }}">Tech Log</a></h1>
+    <header id="header">
+        <h1 class="site_title"><a href="{{ url_for('dashboard') }}">Tech Log</a></h1>
         <div class="user-info">
-            <span>ログイン中: <strong>{{ user_email }}</strong></span>
+            <span>{{ user_email }}</span>
             <svg id="logout-btn" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
         </div>
     </header>
@@ -444,31 +583,39 @@
           <li><a href="{{ url_for('dashboard') }}">TOP</a></li>
           {% if current_filter %}
             <li><a href="{{ url_for('dashboard') }}">ダッシュボード</a></li>
-            <li>{{ current_filter }}</li>
+            <li>
+                {% if search_type == 'tag' %}タグ: {% endif %}
+                {{ current_filter }}
+            </li>
           {% else %}
             <li>ダッシュボード</li>
           {% endif %}
         </ul>
     </div>
+    
     <div class="search-container">
         <form action="{{ url_for('dashboard') }}" method="GET" class="search-form">
             
-            <div class="search-input-wrapper">
-                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path d="M 20.5 6 C 12.515556 6 6 12.515562 6 20.5 C 6 28.484438 12.515556 35 20.5 35 C 23.773158 35 26.788919 33.893018 29.220703 32.050781 L 38.585938 41.414062 A 2.0002 2.0002 0 1 0 41.414062 38.585938 L 32.050781 29.220703 C 33.893017 26.788918 35 23.773156 35 20.5 C 35 12.515562 28.484444 6 20.5 6 z M 20.5 10 C 26.322685 10 31 14.677319 31 20.5 C 31 23.295711 29.914065 25.820601 28.148438 27.697266 A 2.0002 2.0002 0 0 0 27.701172 28.144531 C 25.824103 29.912403 23.29771 31 20.5 31 C 14.677315 31 10 26.322681 10 20.5 C 10 14.677319 14.677315 10 20.5 10 z"/></svg>
-                
-                <input type="search" name="q" placeholder="タイトルや振り返り文から検索..." value="{{ keyword_query or '' }}">
+            <div class="search-select-wrapper">
+                <select name="search_type" class="search-select">
+                    <option value="all" {% if search_type == 'all' or not search_type %}selected{% endif %}>すべて</option>
+                    <option value="tag" {% if search_type == 'tag' %}selected{% endif %}>タグ</option>
+                    <option value="title" {% if search_type == 'title' %}selected{% endif %}>タイトル</option>
+                    <option value="reflection" {% if search_type == 'reflection' %}selected{% endif %}>振り返り</option>
+                </select>
             </div>
-            {% if current_filter %}
-            <input type="hidden" name="filter" value="{{ current_filter }}">
-            {% endif %}
+
+            <div class="search-input-wrapper">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M 20.5 6 C 12.515556 6 6 12.515562 6 20.5 C 6 28.484438 12.515556 35 20.5 35 C 23.773158 35 26.788919 33.893018 29.220703 32.050781 L 38.585938 41.414062 A 2.0002 2.0002 0 1 0 41.414062 38.585938 L 32.050781 29.220703 C 33.893017 26.788918 35 23.773156 35 20.5 C 35 12.515562 28.484444 6 20.5 6 z M 20.5 10 C 26.322685 10 31 14.677319 31 20.5 C 31 23.295711 29.914065 25.820601 28.148438 27.697266 A 2.0002 2.0002 0 0 0 27.701172 28.144531 C 25.824103 29.912403 23.29771 31 20.5 31 C 14.677315 31 10 26.322681 10 20.5 C 10 14.677319 14.677315 10 20.5 10 z"/></svg>
+                
+                <input type="search" name="q" placeholder="検索キーワードを入力..." value="{{ keyword_query or '' }}">
+            </div>
             
             <button type="submit">検索</button>
         </form>
     </div>
 
     <div class="container">
-        
-
         <div class="recommendation-section">
             <div class="section-header">
                 <h2 class="section-title">★ あなたへのおすすめ</h2>
@@ -497,16 +644,24 @@
                             <div class="article-footer">
                                 <div class="tags">
                                     {% if article.tags %}
-                                        {% for tag in article.tags %}<span>{{ tag }}</span>{% endfor %}
+                                        {% for tag in article.tags %}
+                                            <object>
+                                                <a href="{{ url_for('dashboard', q=tag, search_type='tag') }}" class="tag-link">{{ tag }}</a>
+                                            </object>
+                                        {% endfor %}
                                     {% endif %}
                                 </div>
                                 <div class="article-actions">
-                                    <button class="read-later-btn {% if article.readLater %}active{% endif %}" data-article-id="{{ article.id }}" title="後で見る">
-                                        <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="22px" height="22px">    <path d="M12,2C6.477,2,2,6.477,2,12c0,5.523,4.477,10,10,10s10-4.477,10-10C22,6.477,17.523,2,12,2z M14.586,16l-3.293-3.293 C11.105,12.519,11,12.265,11,12V7c0-0.552,0.448-1,1-1h0c0.552,0,1,0.448,1,1v4.586l3,3c0.39,0.39,0.39,1.024,0,1.414l0,0 C15.61,16.39,14.976,16.39,14.586,16z"/></svg>
-                                    </button>
-                                    <button class="delete-btn" data-article-id="{{ article.id }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="20px" height="20px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>
-                                    </button>
+                                    <object>
+                                        <button class="read-later-btn {% if article.readLater %}active{% endif %}" data-article-id="{{ article.id }}" title="後で見る">
+                                            <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="22px" height="22px">    <path d="M12,2C6.477,2,2,6.477,2,12c0,5.523,4.477,10,10,10s10-4.477,10-10C22,6.477,17.523,2,12,2z M14.586,16l-3.293-3.293 C11.105,12.519,11,12.265,11,12V7c0-0.552,0.448-1,1-1h0c0.552,0,1,0.448,1,1v4.586l3,3c0.39,0.39,0.39,1.024,0,1.414l0,0 C15.61,16.39,14.976,16.39,14.586,16z"/></svg>
+                                        </button>
+                                    </object>
+                                    <object>
+                                        <button class="delete-btn" data-article-id="{{ article.id }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="20px" height="20px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>
+                                        </button>
+                                    </object>
                                 </div>
                             </div>
                         </div>
@@ -536,16 +691,24 @@
                             <div class="article-footer">
                                 <div class="tags">
                                     {% if article.tags %}
-                                        {% for tag in article.tags %}<span>{{ tag }}</span>{% endfor %}
+                                        {% for tag in article.tags %}
+                                            <object>
+                                                <a href="{{ url_for('dashboard', q=tag, search_type='tag') }}" class="tag-link">{{ tag }}</a>
+                                            </object>
+                                        {% endfor %}
                                     {% endif %}
                                 </div>
                                 <div class="article-actions">
-                                    <button class="read-later-btn {% if article.readLater %}active{% endif %}" data-article-id="{{ article.id }}" title="後で見る">
-                                        <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="22px" height="22px">    <path d="M12,2C6.477,2,2,6.477,2,12c0,5.523,4.477,10,10,10s10-4.477,10-10C22,6.477,17.523,2,12,2z M14.586,16l-3.293-3.293 C11.105,12.519,11,12.265,11,12V7c0-0.552,0.448-1,1-1h0c0.552,0,1,0.448,1,1v4.586l3,3c0.39,0.39,0.39,1.024,0,1.414l0,0 C15.61,16.39,14.976,16.39,14.586,16z"/></svg>
-                                    </button>
-                                    <button class="delete-btn" data-article-id="{{ article.id }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="20px" height="20px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>
-                                    </button>
+                                    <object>
+                                        <button class="read-later-btn {% if article.readLater %}active{% endif %}" data-article-id="{{ article.id }}" title="後で見る">
+                                            <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="22px" height="22px">    <path d="M12,2C6.477,2,2,6.477,2,12c0,5.523,4.477,10,10,10s10-4.477,10-10C22,6.477,17.523,2,12,2z M14.586,16l-3.293-3.293 C11.105,12.519,11,12.265,11,12V7c0-0.552,0.448-1,1-1h0c0.552,0,1,0.448,1,1v4.586l3,3c0.39,0.39,0.39,1.024,0,1.414l0,0 C15.61,16.39,14.976,16.39,14.586,16z"/></svg>
+                                        </button>
+                                    </object>
+                                    <object>
+                                        <button class="delete-btn" data-article-id="{{ article.id }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="20px" height="20px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>
+                                        </button>
+                                    </object>
                                 </div>
                             </div>
                         </div>
@@ -647,7 +810,6 @@
 
                             const data = await response.json();
                             if (data.status === 'success') {
-                                //  alert('おすすめ記事を更新しました！ページをリロードします。');
                                  window.location.reload();
                             } else if (data.status === 'skipped') {
                                 alert('おすすめ対象の記事が3件未満のため、更新されませんでした。');
