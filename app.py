@@ -321,7 +321,7 @@ def dashboard():
     user_id = g.user_id
     tag_filter = request.args.get('filter')
     keyword_query = request.args.get('q')
-    search_type = request.args.get('search_type', 'all')  # ★追加: 検索タイプを取得
+    search_type = request.args.get('search_type', 'all')
 
     try:
         recommended_articles = []
