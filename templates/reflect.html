@@ -4,142 +4,304 @@
     <meta charset="UTF-8">
     <title>振り返り ({{ progress }}) - Tech Log</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://indestructibletype-fonthosting.github.io/renner.css" type="text/css" charset="utf-8" />
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
     <style>
+        /* --- Design System --- */
+        :root {
+            --primary: #000000;
+            --accent: #0066CC;
+            --bg-body: #FBFBFD;
+            --bg-section: #FFFFFF;
+            --text-main: #1D1D1F;
+            --text-sub: #86868B;
+            --glass: rgba(255, 255, 255, 0.8);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --radius-lg: 24px;
+            --radius-pill: 100px;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-            margin: 0; 
-            background-color: #f8f9fa; 
+            font-family: 'Jost', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
         }
-        header {
-            background-color: #5D6D7E; 
-            padding: 1em 2em; 
-            border-bottom: 1px solid #dee2e6; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+
+        /* --- Header --- */
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            padding: 0 40px;
+            background-color: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        header h1 {
-            margin: 0; 
-            font-size: 1.5em; 
-            color: #ffffff; 
+
+        .site_title {
+            color: var(--text-main);
+            font-family: 'Renner*', sans-serif;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: -0.02em;
         }
+
         .user-info {
-            font-size: 0.9em; 
-            color: #ffffff; 
+            font-size: 0.9em;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
         }
+
+        /* --- Container --- */
         .container {
-            max-width: 800px; 
-            margin: 2em auto; 
-            padding: 2em; 
-            background-color: #fff; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            max-width: 800px;
+            width: 90%;
+            margin: 40px auto 60px auto;
+            padding: 60px;
+            background-color: var(--bg-section);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            box-sizing: border-box;
+            position: relative;
         }
+
+        .progress-badge {
+            position: absolute;
+            top: -15px;
+            right: 40px;
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: var(--radius-pill);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
         .article-title {
-            margin-top: 0; 
-            font-size: 2em; 
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 2em;
+            font-weight: 700;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
         }
+
         .source {
-            color: #6c757d; 
-            font-style: italic; 
-            margin-bottom: 2em; 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 1em; 
+            color: var(--text-sub);
+            font-size: 0.95em;
+            margin-bottom: 30px;
+            font-family: 'Inter', sans-serif;
         }
         .source a {
-            color: #007bff; 
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
         }
+        .source a:hover {
+            text-decoration: underline;
+        }
+
         .summary {
-            color: #212529; 
-            line-height: 1.7; 
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 1.05em;
+            padding: 24px;
+            background-color: #F5F5F7;
+            border-radius: 16px;
+            margin-bottom: 40px;
         }
+
+        /* --- Form Elements --- */
         .form-group {
-            margin-bottom: 1.5em; 
+            margin-bottom: 2em;
         }
         .form-group label {
-            display: block; 
-            font-weight: bold; 
-            margin-bottom: 0.5em; 
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            color: var(--text-main);
         }
+
+        /* Textarea Style */
         .form-group textarea {
-            width: 100%; 
-            padding: 0.5em; 
-            font-size: 1em; 
-            border: 1px solid #ccc; 
-            border-radius: 5px; 
-            box-sizing: 
-            border-box; 
-            min-height: 100px; 
-            resize: vertical; 
+            width: 100%;
+            padding: 16px;
+            font-size: 1em;
+            border: 1px solid #E5E5EA;
+            border-radius: 12px;
+            box-sizing: border-box;
+            min-height: 120px;
+            resize: vertical;
+            background-color: #FBFBFD;
+            color: var(--text-main);
+            font-family: 'Jost', 'Noto Sans JP', sans-serif;
+            transition: all 0.2s;
         }
+        .form-group textarea:focus {
+            outline: none;
+            background-color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        /* Tag Select Group (Radio Buttons) */
         .tag-select-group {
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 10px; 
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .tag-select-group input[type="radio"] {
-            display: none; 
+            display: none;
         }
         .tag-select-group label {
-            display: inline-block; 
-            background-color: #e9ecef; 
-            color: #495057; 
-            padding: 0.6em 1em; 
-            border-radius: 15px; 
-            font-size: 0.9em; 
-            cursor: pointer; 
-            transition: all 0.2s ease-in-out; 
-            border: 1px solid #e9ecef; 
+            display: inline-block;
+            background-color: white;
+            color: var(--text-sub);
+            padding: 10px 20px;
+            border-radius: var(--radius-pill);
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #E5E5EA;
+            font-weight: 500;
         }
+        
         .tag-select-group label:hover {
-            background-color: #d3dce3; 
-            border-color: #b6c3d0; 
+            background-color: #F5F5F7;
+            border-color: #D1D1D6;
+            color: var(--text-main);
         }
+
         .tag-select-group input[type="radio"]:checked + label {
-            background-color: #007bff; 
-            color: white; 
-            border-color: #0056b3; 
-            font-weight: bold; 
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
+
+        /* Buttons */
         .workflow-nav {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-top: 1em; 
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 50px;
+            gap: 15px;
+            padding-top: 30px;
+            border-top: 1px dashed #E5E5EA;
         }
+
+        .workflow-nav button, .workflow-nav .skip-btn {
+            padding: 14px 32px;
+            border-radius: var(--radius-pill);
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-family: 'Inter', sans-serif;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .workflow-nav button[type="submit"] {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .workflow-nav button[type="submit"]:hover {
+            background-color: var(--text-main);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
         .workflow-nav .skip-btn {
-            background-color: #6c757d; 
-            color: white; 
-            padding: 10px 20px; 
-            border-radius: 5px; 
-            text-decoration: none; 
-            font-size: 1em; 
+            background-color: white;
+            color: var(--text-sub);
+            border: 1px solid #E5E5EA;
         }
-        .workflow-nav button {
-            background-color: #007bff; 
-            color: white; 
-            padding: 10px 20px; 
-            border-radius: 5px; 
-            text-decoration: none; 
-            font-size: 1em; 
-            border: none; 
-            cursor: pointer; 
+        .workflow-nav .skip-btn:hover {
+            background-color: #F5F5F7;
+            color: var(--text-main);
         }
-        .progress {
-            font-size: 1.2em; 
-            font-weight: bold; 
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #header { padding: 0 20px; height: 60px; }
+            .site_title { font-size: 1.3rem; }
+            
+            .container {
+                padding: 30px 20px;
+                width: 95%;
+                margin-top: 30px;
+            }
+            .article-title { font-size: 1.5em; }
+            
+            .workflow-nav {
+                flex-direction: column-reverse;
+                gap: 15px;
+            }
+            .workflow-nav button, .workflow-nav .skip-btn {
+                width: 100%;
+            }
+            
+            .progress-badge {
+                position: static;
+                display: inline-block;
+                margin-bottom: 20px;
+                font-size: 0.8em;
+            }
         }
     </style>
 </head>
 <body>
-    <header><h1>Tech Log</h1><div class="user-info"><span>{{ user_email }}</span></div></header>
+    <header id="header">
+        <h1 class="site_title">Tech Log</h1>
+        <div class="user-info">
+            <span>{{ user_email }}</span>
+        </div>
+    </header>
+
     <div class="container">
+        <div class="progress-badge">Progress: {{ progress }}</div>
+        
         <h2 class="article-title">{{ article.generatedTitle }}</h2>
-        <p class="source">情報元: {{ article.source }} | <a href="{{ article.originalUrl }}" target="_blank">元の記事を読む</a></p>
-        <p class="summary">{{ article.summary }}</p>
-        <hr style="margin: 2em 0;">
+        <p class="source">情報元: {{ article.source }} | <a href="{{ article.originalUrl }}" target="_blank" rel="noopener noreferrer">元の記事を読む</a></p>
+        
+        <div class="summary">
+            {{ article.summary }}
+        </div>
+        
         <form id="reflection-form">
             <div class="form-group">
                 <label>役に立ったか（ティア）</label>
@@ -151,6 +313,7 @@
                     <input type="radio" id="u-d" name="usefulness" value="tier-d"><label for="u-d">D (あまり役立たなかった)</label>
                 </div>
             </div>
+            
             <div class="form-group">
                 <label>サイトを見た印象</label>
                 <div class="tag-select-group">
@@ -160,6 +323,7 @@
                     <input type="radio" id="i-boring" name="impression" value="impression-boring"><label for="i-boring">つまらない</label>
                 </div>
             </div>
+            
             <div class="form-group">
                 <label>サイトのコンテンツ</label>
                 <div class="tag-select-group">
@@ -171,13 +335,34 @@
                     <input type="radio" id="c-other" name="content_type" value="content-other"><label for="c-other">その他</label>
                 </div>
             </div>
-            <div class="form-group"><label for="specific_impression">具体的な印象</label><textarea id="specific_impression" name="specific_impression"></textarea></div>
-            <div class="form-group"><label for="why_important">なぜこの情報が重要だと感じたのか</label><textarea id="why_important" name="why_important"></textarea></div>
-            <div class="form-group"><label for="what_i_got">何を得ることができたか</label><textarea id="what_i_got" name="what_i_got"></textarea></div>
-            <div class="form-group"><label for="memo">メモ</label><textarea id="memo" name="memo"></textarea></div>
-            <div class="workflow-nav"><a href="#" id="skip-btn" class="skip-btn">スキップ</a><span class="progress">{{ progress }}</span><button type="submit">保存して次へ</button></div>
+            
+            <div class="form-group">
+                <label for="specific_impression">具体的な印象</label>
+                <textarea id="specific_impression" name="specific_impression" placeholder="例：〇〇の解説がわかりやすかった"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="why_important">なぜこの情報が重要だと感じたのか</label>
+                <textarea id="why_important" name="why_important" placeholder="例：現在開発中の機能に直接応用できるため"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="what_i_got">何を得ることができたか</label>
+                <textarea id="what_i_got" name="what_i_got" placeholder="例：FirebaseのAuthentication周りの実装パターン"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="memo">メモ</label>
+                <textarea id="memo" name="memo" placeholder="その他、自由なメモ"></textarea>
+            </div>
+
+            <div class="workflow-nav">
+                <a href="#" id="skip-btn" class="skip-btn">スキップ</a>
+                <button type="submit">保存して次へ</button>
+            </div>
         </form>
     </div>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA", 
@@ -189,29 +374,69 @@
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        
+        // サーバーサイドから渡された変数を展開
         const all_ids = '{{ all_ids }}'.split(',');
         const current_index = parseInt('{{ current_index }}');
         const next_index = current_index + 1;
         const article_id = '{{ article_id }}';
+
         function goToNext() {
              if (next_index >= all_ids.length) {
+                // 全て完了したらトップへ
                 window.location.href = '/'; 
             } else {
+                // 次の記事へ
                 window.location.href = `/reflect?ids=${all_ids.join(',')}&index=${next_index}`; 
             } 
         }
+
         document.getElementById('skip-btn').addEventListener('click', (e) => {
-             e.preventDefault(); goToNext(); 
+             e.preventDefault(); 
+             goToNext(); 
         });
+
         document.getElementById('reflection-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const getRadioValue = (name) => { const selectedRadio = document.querySelector(`input[name="${name}"]:checked`); return selectedRadio ? selectedRadio.value : ""; };
-            const reflectionData = { usefulness: getRadioValue('usefulness'), impression: getRadioValue('impression'), content_type: getRadioValue('content_type'), specific_impression: document.getElementById('specific_impression').value, why_important: document.getElementById('why_important').value, what_i_got: document.getElementById('what_i_got').value, memo: document.getElementById('memo').value };
-            document.querySelector('#reflection-form button').disabled = true;
+            
+            const getRadioValue = (name) => { 
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`); 
+                return selectedRadio ? selectedRadio.value : ""; 
+            };
+            
+            const reflectionData = { 
+                usefulness: getRadioValue('usefulness'), 
+                impression: getRadioValue('impression'), 
+                content_type: getRadioValue('content_type'), 
+                specific_impression: document.getElementById('specific_impression').value, 
+                why_important: document.getElementById('why_important').value, 
+                what_i_got: document.getElementById('what_i_got').value, 
+                memo: document.getElementById('memo').value 
+            };
+            
+            const submitBtn = document.querySelector('#reflection-form button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '保存中...';
+            
             auth.currentUser.getIdToken().then((token) => {
-                fetch(`/article/${article_id}/reflection`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(reflectionData) })
-                .then(response => { if (!response.ok) throw new Error('Save failed'); goToNext(); })
-                .catch(error => { console.error('Error:', error); alert('保存に失敗しました。'); document.querySelector('#reflection-form button').disabled = false; });
+                fetch(`/article/${article_id}/reflection`, { 
+                    method: 'POST', 
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Authorization': 'Bearer ' + token 
+                    }, 
+                    body: JSON.stringify(reflectionData) 
+                })
+                .then(response => { 
+                    if (!response.ok) throw new Error('Save failed'); 
+                    goToNext(); 
+                })
+                .catch(error => { 
+                    console.error('Error:', error); 
+                    alert('保存に失敗しました。'); 
+                    submitBtn.disabled = false; 
+                    submitBtn.textContent = '保存して次へ';
+                });
             });
         });
     </script>
