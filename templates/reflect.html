@@ -15,7 +15,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
     <style>
-        /* --- Design System --- */
         :root {
             --primary: #000000;
             --accent: #0066CC;
@@ -42,7 +41,6 @@
             line-height: 1.6;
         }
 
-        /* --- Header --- */
         #header {
             display: flex;
             justify-content: space-between;
@@ -76,7 +74,6 @@
             font-weight: 500;
         }
 
-        /* --- Container --- */
         .container {
             max-width: 800px;
             width: 90%;
@@ -138,7 +135,6 @@
             margin-bottom: 40px;
         }
 
-        /* --- Form Elements --- */
         .form-group {
             margin-bottom: 2em;
         }
@@ -150,7 +146,6 @@
             color: var(--text-main);
         }
 
-        /* Textarea Style */
         .form-group textarea {
             width: 100%;
             padding: 16px;
@@ -172,7 +167,6 @@
             box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
         }
 
-        /* Tag Select Group (Radio Buttons) */
         .tag-select-group {
             display: flex;
             flex-wrap: wrap;
@@ -208,7 +202,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        /* Buttons */
         .workflow-nav {
             display: flex;
             justify-content: flex-end;
@@ -255,7 +248,6 @@
             color: var(--text-main);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             #header { padding: 0 20px; height: 60px; }
             .site_title { font-size: 1.3rem; }
@@ -293,7 +285,7 @@
     </header>
 
     <div class="container">
-        <div class="progress-badge">Progress: {{ progress }}</div>
+        <div class="progress-badge">ページ: {{ progress }}</div>
         
         <h2 class="article-title">{{ article.generatedTitle }}</h2>
         <p class="source">情報元: {{ article.source }} | <a href="{{ article.originalUrl }}" target="_blank" rel="noopener noreferrer">元の記事を読む</a></p>
@@ -375,7 +367,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         
-        // サーバーサイドから渡された変数を展開
         const all_ids = '{{ all_ids }}'.split(',');
         const current_index = parseInt('{{ current_index }}');
         const next_index = current_index + 1;
@@ -383,10 +374,8 @@
 
         function goToNext() {
              if (next_index >= all_ids.length) {
-                // 全て完了したらトップへ
                 window.location.href = '/'; 
             } else {
-                // 次の記事へ
                 window.location.href = `/reflect?ids=${all_ids.join(',')}&index=${next_index}`; 
             } 
         }

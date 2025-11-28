@@ -2,50 +2,341 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Tech Log - 処理中...</title>
+    <title>Tech Log - 解析中...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&family=VT323&family=Zen+Kurenaido&family=Shippori+Mincho&family=DotGothic16&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://indestructibletype-fonthosting.github.io/renner.css" type="text/css" charset="utf-8" />
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
     <style>
+        /* --- Design System --- */
+        :root {
+            --primary: #000000;
+            --accent: #0066CC;
+            --bg-body: #FBFBFD;
+            --bg-section: #FFFFFF;
+            --text-main: #1D1D1F;
+            --text-sub: #86868B;
+            --glass: rgba(255, 255, 255, 0.85);
+            --radius-lg: 24px;
+        }
+
         body {
-            font-family: sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            text-align: center; 
-            margin: 0; 
-            background-color: #f4f4f4; 
+            font-family: 'Jost', 'Noto Sans JP', sans-serif;
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
         }
+
+        /* --- Background Word Cloud Animation --- */
+        #word-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-word {
+            position: absolute;
+            opacity: 0;
+            /* トランジション設定：出現・消滅・移動を滑らかに */
+            transition: opacity 2.0s ease, transform 2.0s ease, filter 2.0s ease, color 1.5s ease;
+            white-space: nowrap;
+            user-select: none;
+            color: #4a4a4f; 
+            filter: blur(0.5px);
+            will-change: opacity, transform, filter;
+        }
+
+        /* 登場時 */
+        .floating-word.visible {
+            opacity: 0.7; 
+            transform: scale(1);
+            filter: blur(0);
+        }
+
+        /* リセット時（全てフェードアウト） */
+        .floating-word.reset-fade {
+            opacity: 0 !important;
+            transform: scale(0.9) !important;
+            filter: blur(5px) !important;
+        }
+
+        /* ノイズ消滅時 */
+        .word-noise.fade-out {
+            opacity: 0;
+            transform: translateY(50px) scale(0.8) rotate(5deg);
+            filter: blur(10px);
+        }
+
+        /* ITキーワード強調時 */
+        .word-target.highlight {
+            opacity: 1 !important;
+            color: var(--accent) !important;
+            transform: scale(1.5);
+            text-shadow: 0 0 20px rgba(0, 102, 204, 0.4);
+            z-index: 10;
+            font-family: 'Renner*', 'Jost', sans-serif !important; 
+            font-weight: 700;
+            filter: blur(0) !important;
+        }
+
+        /* --- Main Card --- */
+        .center-wrapper {
+            position: relative;
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+        }
+
         .container {
-            background-color: white; 
-            padding: 40px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            background-color: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 50px 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            text-align: center;
         }
-        .loader {
-            border: 8px solid #f3f3f3; 
-            border-top: 8px solid #5D6D7E; 
-            border-radius: 50%; 
-            width: 60px; 
-            height: 60px; 
-            animation: spin 2s linear infinite; 
-            margin: 20px auto; 
+
+        h1.site_title {
+            font-family: 'Renner*', sans-serif;
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin: 0 0 20px 0;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } 
+
+        .scanner-line {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 20px 0;
+            animation: scan 3s ease-in-out infinite;
+            border-radius: 2px;
         }
+
+        @keyframes scan {
+            0% { transform: translateX(-50%) scaleX(0.2); opacity: 0; }
+            50% { transform: translateX(0) scaleX(1); opacity: 1; }
+            100% { transform: translateX(50%) scaleX(0.2); opacity: 0; }
+        }
+
+        p {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin: 10px 0;
+            font-weight: 600;
+            transition: opacity 0.5s; /* テキスト切り替え用 */
+        }
+
+        p.sub-text {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 400;
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Tech Log</h1>
-        <p>閲覧履歴を分析・要約しています...</p>
-        <p>このページは自動的に切り替わります。</p>
-        <div class="loader"></div>
+    
+    <div id="word-container"></div>
+
+    <div class="center-wrapper">
+        <div class="container">
+            <h1 class="site_title">Tech Log</h1>
+            <div class="scanner-line"></div>
+            <p id="status-msg">解析を開始します...</p>
+            <p class="sub-text">AI Filtering System Active</p>
+        </div>
     </div>
 
     <script>
+        // --- Settings & Data ---
+        const fontFamilies = [
+            "'Inter', sans-serif", "'Noto Sans JP', sans-serif", "'Times New Roman', serif",
+            "'Courier New', monospace", "'Rock Salt', cursive", "'VT323', monospace",
+            "'Zen Kurenaido', sans-serif", "'Shippori Mincho', serif", "'DotGothic16', sans-serif",
+            "Impact, sans-serif"
+        ];
+
+        const noiseWords = [
+            "Lunch", "Cat", "Sleep", "Ramen", "Weather", "Shopping", "Game", "Music", "Movie", "Travel",
+            "Beer", "Wine", "Coffee", "Cafe", "Burger", "Pizza", "Sushi", "Steak", "Yoga", "Gym",
+            "Soccer", "Baseball", "Tennis", "Golf", "Fishing", "Camping", "Drive", "Train", "Bus", "Flight",
+            "Hotel", "Spa", "Beach", "Mountain", "River", "Forest", "Flower", "Dog", "Bird", "Sky",
+            "Rain", "Snow", "Wind", "Sun", "Moon", "Star", "Cloud", "Rainbow", "Book", "Comic",
+            "Novel", "Magazine", "News", "Gossip", "Fashion", "Makeup", "Hair", "Nail", "Shoes", "Bag",
+            "Watch", "Ring", "Gift", "Party", "Wedding", "Birthday", "Xmas", "NewYear", "Holiday", "Work",
+            "Meeting", "Call", "Email", "Desk", "Chair", "Pen", "Paper", "Money", "Bank", "Card",
+            "Ticket", "Coupon", "Sale", "Price", "Tax", "House", "Room", "Kitchen", "Bath", "Bed",
+            "Sofa", "TV", "Radio", "Video", "Photo", "Camera", "Phone", "Map", "App", "Chat"
+        ];
+
+        const itKeywords = [
+            "Python", "Flask", "Django", "FastAPI", "JavaScript", "TypeScript", "React", "Vue.js", "Next.js", "Node.js",
+            "HTML", "CSS", "Sass", "Tailwind", "Bootstrap", "Firebase", "AWS", "GCP", "Azure", "Docker",
+            "Kubernetes", "Git", "GitHub", "GitLab", "SQL", "MySQL", "PostgreSQL", "SQLite", "NoSQL", "MongoDB",
+            "Redis", "API", "REST", "GraphQL", "JSON", "OAuth", "JWT", "Linux", "Ubuntu", "CentOS",
+            "Shell", "Bash", "Vim", "VSCode", "Algorithm", "DataStructure", "MachineLearning", "AI", "DeepLearning", "NLP"
+        ];
+
+        const wordContainer = document.getElementById('word-container');
+        const statusMsg = document.getElementById('status-msg');
+
+        let isProcessingComplete = false; // 処理完了フラグ
+        let redirectData = null; // 遷移先データ
+
+        // --- Helper Functions ---
+        function random(min, max) { return Math.random() * (max - min) + min; }
+        
+        // 指定時間待機するPromise関数
+        function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+        function createWord(text, type) {
+            const span = document.createElement('div');
+            span.textContent = text;
+            span.classList.add('floating-word');
+            span.classList.add(type === 'it' ? 'word-target' : 'word-noise');
+            
+            span.style.left = `${random(-10, 100)}vw`;
+            span.style.top = `${random(-10, 100)}vh`;
+            span.style.fontSize = `${random(0.8, 2.5)}rem`;
+            span.style.transform = `rotate(${random(-45, 45)}deg)`;
+            span.style.fontFamily = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
+            span.style.zIndex = Math.floor(random(1, 10));
+
+            wordContainer.appendChild(span);
+            return span;
+        }
+
+        // --- Animation Sequence ---
+
+        // 1. カオスの生成（単語をばら撒く）
+        async function spawnChaos() {
+            statusMsg.textContent = "膨大なログを読み込んでいます...";
+            
+            const totalWords = 120; // ノイズ
+            const targetWords = 40; // ターゲット
+
+            for (let i = 0; i < totalWords + targetWords; i++) {
+                const isTarget = i >= totalWords;
+                const text = isTarget 
+                    ? itKeywords[Math.floor(Math.random() * itKeywords.length)]
+                    : noiseWords[Math.floor(Math.random() * noiseWords.length)];
+                
+                const el = createWord(text, isTarget ? 'it' : 'noise');
+                
+                // 少しずつ出現させる
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, random(100, 4000));
+            }
+
+            // 全てが出現しきるのを待つ
+            await wait(5000); 
+        }
+
+        // 2. フィルタリング（ノイズ消去＆抽出）
+        async function runFilter() {
+            statusMsg.textContent = "技術情報を抽出中...";
+
+            const noises = document.querySelectorAll('.word-noise');
+            const targets = document.querySelectorAll('.word-target');
+
+            // ノイズ消去
+            noises.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.remove('visible');
+                    el.classList.add('fade-out');
+                }, index * 20);
+            });
+
+            await wait(2000); // ノイズが消えかけるのを待つ
+
+            // ターゲット強調
+            statusMsg.textContent = "重要な情報を特定しました";
+            targets.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('highlight');
+                }, index * 50);
+            });
+
+            await wait(4000); // 結果を見せる時間
+        }
+
+        // 3. リセット（画面をクリア）
+        async function resetScene() {
+            statusMsg.textContent = "次のデータをスキャン中...";
+            
+            // 全ての要素をフェードアウト
+            const allWords = document.querySelectorAll('.floating-word');
+            allWords.forEach(el => {
+                el.classList.remove('visible', 'highlight', 'fade-out');
+                el.classList.add('reset-fade');
+            });
+
+            await wait(2000); // フェードアウト待ち
+
+            // DOMをクリア
+            wordContainer.innerHTML = '';
+            await wait(500);
+        }
+
+        // --- Main Loop ---
+        async function startLoop() {
+            while (true) {
+                // 処理が完了していたらループを抜けて遷移
+                if (isProcessingComplete && redirectData) {
+                    statusMsg.textContent = "解析完了。リダイレクトします...";
+                    await wait(1000);
+                    
+                    const newArticleIds = redirectData.newArticleIds;
+                    if (newArticleIds && newArticleIds.length > 0) {
+                        window.location.href = `/reflect?ids=${newArticleIds.join(',')}&index=0`;
+                    } else {
+                        window.location.href = '/dashboard';
+                    }
+                    break;
+                }
+
+                // アニメーションサイクル実行
+                await spawnChaos(); // 出現 (5s)
+                
+                // 処理完了チェック（出現中に終わってたらフィルタリングへ進む前に抜ける等はせず、演出を完遂させる）
+                
+                await runFilter();  // 抽出 (6s)
+                await resetScene(); // 消去 (2.5s)
+                
+                // 合計 1サイクル 約13-14秒
+            }
+        }
+
+        // --- Firebase Logic ---
         const firebaseConfig = {
             apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA",
             authDomain: "tech-log-1cbba.firebaseapp.com",
@@ -59,6 +350,9 @@
         const db = firebase.firestore();
         const jobId = '{{ job_id }}';
 
+        // アニメーション開始
+        startLoop();
+
         auth.onAuthStateChanged(user => {
             if (user) {
                 const jobRef = db.collection('users').doc(user.uid).collection('jobs').doc(jobId);
@@ -66,18 +360,15 @@
                 const unsubscribe = jobRef.onSnapshot(doc => {
                     const data = doc.data();
                     if (data && data.status === 'complete') {
+                        // 完了フラグを立てる (アニメーションの切れ目で遷移する)
+                        isProcessingComplete = true;
+                        redirectData = data;
                         unsubscribe();
-                        const newArticleIds = data.newArticleIds;
-                        if (newArticleIds && newArticleIds.length > 0) {
-                            window.location.href = `/reflect?ids=${newArticleIds.join(',')}&index=0`;
-                        } else {
-                            window.location.href = '/';
-                        }
+                    } else if (data && data.status === 'error') {
+                        window.location.href = '/dashboard';
                     }
                 }, error => {
-                    console.error("Error listening to job updates:", error);
-                    alert("処理状態の確認中にエラーが発生しました。");
-                    window.location.href = '/';
+                    window.location.href = '/dashboard';
                 });
             } else {
                 window.location.href = '/login';

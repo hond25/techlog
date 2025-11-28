@@ -15,7 +15,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     
     <style>
-        /* --- Design System from login.html --- */
         :root {
             --primary: #000000;
             --accent: #0066CC;
@@ -39,7 +38,6 @@
             line-height: 1.6;
         }
 
-        /* --- Header Styles --- */
         #header {
             display: flex;
             justify-content: space-between;
@@ -103,7 +101,6 @@
             transform: rotate(90deg);
         }
 
-        /* --- Breadcrumbs --- */
         .breadcrumbs {
             padding: 12px 40px;
             font-size: 0.85rem;
@@ -148,7 +145,6 @@
             padding-top: 1em;
         }
 
-        /* --- Search Box Styling (Updated) --- */
         .search-container {
             max-width: 1200px;
             margin: 0 auto 1.5em auto;
@@ -163,8 +159,7 @@
             background: white;
             border: 1px solid rgba(0,0,0,0.05);
         }
-        
-        /* 検索タイプ選択プルダウン */
+
         .search-select-wrapper {
             position: relative;
             border-right: 1px solid #E5E5EA;
@@ -201,7 +196,6 @@
             align-items: center;
         }
         
-        /* アイコンの位置調整 */
         .search-icon {
             margin-left: 16px;
             width: 18px;
@@ -212,7 +206,7 @@
         
         .search-form input[type="search"] {
             width: 100%;
-            padding: 16px 20px 16px 12px; /* アイコン分の余白を調整 */
+            padding: 16px 20px 16px 12px;
             font-size: 1em;
             border: none;
             background: white;
@@ -235,7 +229,6 @@
             background-color: var(--text-main);
         }
 
-        /* --- Recommendations & Update Button --- */
         .update-button-container {
             position: absolute;
             top: 2.4em;
@@ -310,7 +303,6 @@
              letter-spacing: -0.01em;
         }
 
-        /* --- Article Grid & Card --- */
         .article-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -359,7 +351,6 @@
             padding-top: 1em;
         }
         
-        /* --- Tags Styling (Updated for Links) --- */
         .tags {
             margin-top: 0;
             padding-top: 0;
@@ -389,7 +380,6 @@
             border-color: #D1D1D6;
         }
         
-        /* Actions */
         .delete-btn {
             background-color: white;
             border: 1px solid #ff3b30;
@@ -511,7 +501,6 @@
              fill: #ffffff;
         }
 
-        /* Mobile Responsive */
         @media (max-width: 992px) {
             .article-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -553,7 +542,6 @@
             .breadcrumbs {
                 padding: 12px 20px;
             }
-            /* スマホでの検索バー調整 */
             .search-select {
                 min-width: 70px;
                 padding: 0 10px;

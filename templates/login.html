@@ -44,7 +44,6 @@
             line-height: 1.6;
         }
 
-        /* --- Header --- */
         #header {
             display: flex;
             justify-content: space-between;
@@ -118,7 +117,6 @@
             box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
         }
 
-        /* --- Main Visual --- */
         #main_visual {
             width: 100%;
             height: 85vh;
@@ -164,7 +162,6 @@
             box-sizing: border-box;
         }
 
-        /* --- Hero / Concept --- */
         .hero-section {
             text-align: center;
             position: relative;
@@ -205,7 +202,6 @@
             line-height: 1.9;
         }
 
-        /* --- Features --- */
         .features-section {
             display: flex;
             justify-content: space-between;
@@ -271,7 +267,6 @@
             fill: var(--text-main);
         }
 
-        /* --- Start Steps --- */
         #start {
             background-color: #1D1D1F;
             padding: 120px 20px;
@@ -359,20 +354,17 @@
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            /* ★変更点: box-shadowのtransitionも追加 */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             object-fit: contain;
-            cursor: pointer; /* カーソルをポインターに変更 */
+            cursor: pointer;
         }
         
-        /* ★変更点: 画像そのものにホバーした時のスタイル */
         .step_image:hover {
-            transform: scale(1.03); /* 少し拡大 */
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); /* 影を深くして浮き上がり感を強調 */
-            z-index: 10; /* 重なっている場合に手前に表示 */
+            transform: scale(1.03);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            z-index: 10;
         }
 
-        /* --- Login Area --- */
         #login {
             display: flex;
             justify-content: center;
@@ -418,7 +410,6 @@
             transform: translateX(4px);
         }
 
-        /* --- Footer --- */
         #footer {
             display: flex;
             justify-content: space-between;
@@ -457,9 +448,6 @@
             color: var(--primary);
         }
 
-        /* --- Responsive Design (Updated) --- */
-        
-        /* Tablet & Small Desktop (Max 900px) */
         @media (max-width: 900px) {
             .hero-image {
                 opacity: 0.05; 
@@ -485,8 +473,6 @@
             .step_header { justify-content: center; }
             .step_title { font-size: 1.4rem; }
         }
-
-        /* Smartphone (Max 480px) */
         @media (max-width: 480px) {
             #header { 
                 padding: 0 20px; 

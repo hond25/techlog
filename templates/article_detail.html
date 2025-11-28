@@ -15,7 +15,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     
     <style>
-        /* --- Design System --- */
         :root {
             --primary: #000000;
             --accent: #0066CC;
@@ -42,7 +41,6 @@
             line-height: 1.6;
         }
 
-        /* --- Header --- */
         #header {
             display: flex;
             justify-content: space-between;
@@ -106,7 +104,6 @@
             transform: rotate(90deg);
         }
 
-        /* --- Breadcrumbs --- */
         .breadcrumbs {
             padding: 12px 40px;
             max-width: 900px;
@@ -144,7 +141,6 @@
             font-weight: 600;
         }
 
-        /* --- Main Container --- */
         .container {
             max-width: 900px;
             width: 90%;
@@ -221,7 +217,6 @@
             border-bottom: 1px solid #E5E5EA;
         }
 
-        /* --- Tags & Actions --- */
         .tags-actions-container {
             display: flex;
             justify-content: space-between;
@@ -307,7 +302,7 @@
             transform: translateY(-2px);
         }
 
-        /* --- Reflection Section --- */
+
         .reflection-section h2 {
             font-size: 1.5em;
             margin-bottom: 30px;
@@ -326,7 +321,6 @@
             color: var(--text-main);
         }
 
-        /* Textarea Style */
         .form-group textarea {
             width: 100%;
             padding: 16px;
@@ -354,7 +348,6 @@
             cursor: default;
         }
 
-        /* Tag Select Group */
         .tag-select-group {
             display: flex;
             flex-wrap: wrap;
@@ -364,7 +357,7 @@
             display: none;
         }
         .tag-select-group label {
-            display: none; /* 初期状態は非表示（編集モードで表示） */
+            display: none;
             background-color: white;
             color: var(--text-sub);
             padding: 8px 16px;
@@ -376,7 +369,6 @@
             font-weight: 500;
         }
         
-        /* 編集モード時のホバー */
         #reflection-form.is-editing .tag-select-group label {
             display: inline-block;
         }
@@ -386,7 +378,6 @@
             color: var(--text-main);
         }
 
-        /* 選択された状態 */
         .tag-select-group input[type="radio"]:checked + label {
             display: inline-block;
             background-color: var(--primary);
@@ -396,12 +387,11 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
         
-        /* DisabledかつChecked（閲覧モード） */
         .tag-select-group input[type="radio"]:disabled:checked + label {
             background-color: var(--primary);
             color: white;
             border-color: var(--primary);
-            opacity: 1; /* 不透明度を戻す */
+            opacity: 1;
             cursor: default;
         }
 
@@ -419,7 +409,6 @@
             display: none;
         }
 
-        /* Button Group */
         .button-group {
             margin-top: 40px;
             display: flex;
@@ -455,8 +444,6 @@
             background-color: #E5E5EA;
             color: var(--text-main);
         }
-
-        /* Responsive */
         @media (max-width: 768px) {
             #header {
                 padding: 0 20px;
