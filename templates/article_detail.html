@@ -15,25 +15,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     
     <style>
-        :root {
-            --primary: #000000;
-            --accent: #0066CC;
-            --bg-body: #FBFBFD;
-            --bg-section: #FFFFFF;
-            --text-main: #1D1D1F;
-            --text-sub: #86868B;
-            --glass: rgba(255, 255, 255, 0.8);
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
-            --radius-lg: 24px;
-            --radius-pill: 100px;
-        }
-
         body {
             font-family: 'Jost', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
-            background-color: var(--bg-body);
-            color: var(--text-main);
+            background-color: #FBFBFD;
+            color: #1D1D1F;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -47,7 +33,7 @@
             align-items: center;
             height: 70px;
             padding: 0 40px;
-            background-color: var(--glass);
+            background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             position: sticky;
@@ -58,7 +44,7 @@
         }
 
         .site_title {
-            color: var(--text-main);
+            color: #1D1D1F;
             font-family: 'Renner*', sans-serif;
             font-weight: bold;
             font-size: 1.5rem;
@@ -67,18 +53,18 @@
         }
 
         .site_title a {
-            color: var(--text-main);
+            color: #1D1D1F;
             text-decoration: none;
             transition: color 0.3s;
         }
         
         .site_title a:hover {
-            color: var(--accent);
+            color: #0066CC;
         }
 
         .user-info {
             font-size: 0.9em;
-            color: var(--text-sub);
+            color: #86868B;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -86,11 +72,11 @@
         }
         
         .user-info strong {
-            color: var(--text-main);
+            color: #1D1D1F;
         }
 
         #logout-btn {
-             fill: var(--text-main);
+             fill: #1D1D1F;
              cursor: pointer;
              transition: all 0.3s ease;
              padding: 8px;
@@ -122,22 +108,22 @@
         .breadcrumbs li::after {
             content: '>';
             margin: 0 0.6em;
-            color: var(--text-sub);
+            color: #86868B;
         }
         .breadcrumbs li:last-child::after {
             content: '';
         }
         .breadcrumbs a {
             text-decoration: none;
-            color: var(--text-sub);
+            color: #86868B;
             transition: color 0.2s;
         }
         .breadcrumbs a:hover {
             text-decoration: underline;
-            color: var(--accent);
+            color: #0066CC;
         }
         .breadcrumbs li:last-child {
-            color: var(--text-main);
+            color: #1D1D1F;
             font-weight: 600;
         }
 
@@ -146,9 +132,9 @@
             width: 90%;
             margin: 20px auto 60px auto;
             padding: 60px;
-            background-color: var(--bg-section);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
+            background-color: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             box-sizing: border-box;
         }
 
@@ -159,7 +145,7 @@
             width: 40px;
             height: 40px;
             margin-bottom: 20px;
-            color: var(--text-main);
+            color: #1D1D1F;
             text-decoration: none;
             font-weight: bold;
             font-size: 1.2em;
@@ -179,17 +165,17 @@
             font-weight: 700;
             line-height: 1.3;
             letter-spacing: -0.02em;
-            color: var(--text-main);
+            color: #1D1D1F;
         }
 
         .source {
-            color: var(--text-sub);
+            color: #86868B;
             font-size: 0.95em;
             margin-bottom: 30px;
             font-family: 'Inter', sans-serif;
         }
         .source a {
-            color: var(--accent);
+            color: #0066CC;
             text-decoration: none;
             font-weight: 600;
         }
@@ -204,12 +190,12 @@
             object-fit: cover;
             border-radius: 16px;
             margin-bottom: 40px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(0,0,0,0.05);
         }
 
         .summary {
-            color: var(--text-main);
+            color: #1D1D1F;
             line-height: 1.8;
             font-size: 1.05em;
             margin-bottom: 40px;
@@ -235,7 +221,7 @@
         .tags span {
             display: inline-block;
             background-color: #F5F5F7;
-            color: var(--text-sub);
+            color: #86868B;
             padding: 0.4em 1em;
             border-radius: 8px;
             font-size: 0.85em;
@@ -307,7 +293,7 @@
             font-size: 1.5em;
             margin-bottom: 30px;
             font-weight: 700;
-            color: var(--text-main);
+            color: #1D1D1F;
         }
 
         .form-group {
@@ -318,7 +304,7 @@
             font-weight: 600;
             margin-bottom: 10px;
             font-size: 0.95em;
-            color: var(--text-main);
+            color: #1D1D1F;
         }
 
         .form-group textarea {
@@ -331,20 +317,20 @@
             min-height: 120px;
             resize: vertical;
             background-color: #FBFBFD;
-            color: var(--text-main);
+            color: #1D1D1F;
             font-family: 'Jost', sans-serif;
             transition: all 0.2s;
         }
         .form-group textarea:focus {
             outline: none;
             background-color: white;
-            border-color: var(--accent);
+            border-color: #0066CC;
             box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
         }
         .form-group textarea:disabled {
             background-color: #F5F5F7;
             border-color: transparent;
-            color: var(--text-sub);
+            color: #86868B;
             cursor: default;
         }
 
@@ -359,9 +345,9 @@
         .tag-select-group label {
             display: none;
             background-color: white;
-            color: var(--text-sub);
+            color: #86868B;
             padding: 8px 16px;
-            border-radius: var(--radius-pill);
+            border-radius: 100px;
             font-size: 0.9em;
             cursor: pointer;
             transition: all 0.2s;
@@ -375,22 +361,22 @@
         #reflection-form.is-editing .tag-select-group label:hover {
             background-color: #F5F5F7;
             border-color: #D1D1D6;
-            color: var(--text-main);
+            color: #1D1D1F;
         }
 
         .tag-select-group input[type="radio"]:checked + label {
             display: inline-block;
-            background-color: var(--primary);
+            background-color: #000000;
             color: white;
-            border-color: var(--primary);
+            border-color: #000000;
             font-weight: 600;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
         
         .tag-select-group input[type="radio"]:disabled:checked + label {
-            background-color: var(--primary);
+            background-color: #000000;
             color: white;
-            border-color: var(--primary);
+            border-color: #000000;
             opacity: 1;
             cursor: default;
         }
@@ -398,9 +384,9 @@
         .placeholder-tag {
             display: inline-block;
             background-color: transparent;
-            color: var(--text-sub);
+            color: #86868B;
             padding: 8px 16px;
-            border-radius: var(--radius-pill);
+            border-radius: 100px;
             font-size: 0.9em;
             border: 1px dashed #C7C7CC;
         }
@@ -417,7 +403,7 @@
         .button-group button {
             padding: 12px 24px;
             cursor: pointer;
-            border-radius: var(--radius-pill);
+            border-radius: 100px;
             border: none;
             font-size: 1em;
             font-weight: 600;
@@ -426,23 +412,23 @@
         }
         
         #edit-reflection-btn, #save-reflection-btn {
-            background-color: var(--primary);
+            background-color: #000000;
             color: white;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         #edit-reflection-btn:hover, #save-reflection-btn:hover {
-            background-color: var(--accent);
+            background-color: #0066CC;
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0, 102, 204, 0.2);
         }
 
         #cancel-edit-btn {
             background-color: #F5F5F7;
-            color: var(--text-sub);
+            color: #86868B;
         }
         #cancel-edit-btn:hover {
             background-color: #E5E5EA;
-            color: var(--text-main);
+            color: #1D1D1F;
         }
         @media (max-width: 768px) {
             #header {

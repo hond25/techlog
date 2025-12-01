@@ -16,20 +16,6 @@
     <link rel="stylesheet" href="https://indestructibletype-fonthosting.github.io/renner.css" type="text/css" charset="utf-8" />
     
     <style>
-        :root {
-            --primary: #000000;
-            --accent: #0066CC;
-            --bg-body: #FBFBFD;
-            --bg-section: #FFFFFF;
-            --text-main: #1D1D1F;
-            --text-sub: #86868B;
-            --glass: rgba(255, 255, 255, 0.8);
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
-            --radius-lg: 24px;
-            --radius-pill: 100px;
-        }
-
         html {
             scroll-behavior: smooth;
             font-size: 16px;
@@ -37,9 +23,9 @@
 
         body {
             margin: 0;
-            background-color: var(--bg-body);
+            background-color: #FBFBFD;
             font-family: 'Jost', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: var(--text-main);
+            color: #1D1D1F;
             -webkit-font-smoothing: antialiased;
             line-height: 1.6;
         }
@@ -50,7 +36,7 @@
             align-items: center;
             height: 70px;
             padding: 0 40px;
-            background-color: var(--glass);
+            background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             position: sticky;
@@ -61,7 +47,7 @@
         }
 
         .site_title {
-            color: var(--text-main);
+            color: #1D1D1F;
             font-family: 'Renner*', sans-serif;
             font-weight: bold;
             font-size: 1.5rem;
@@ -87,7 +73,7 @@
         }
 
         .header-nav li a {
-            color: var(--text-sub);
+            color: #86868B;
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
@@ -95,7 +81,7 @@
         }
 
         .header-nav li a:hover {
-            color: var(--accent);
+            color: #0066CC;
         }
 
         .header-login-btn {
@@ -103,16 +89,16 @@
             font-size: 0.9rem;
             font-weight: 600;
             color: #fff;
-            background-color: var(--primary);
+            background-color: #000000;
             border: none;
             padding: 10px 24px;
-            border-radius: var(--radius-pill);
+            border-radius: 100px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .header-login-btn:hover {
-            background-color: var(--accent);
+            background-color: #0066CC;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
         }
@@ -120,7 +106,7 @@
         #main_visual {
             width: 100%;
             height: 85vh;
-            background-color: var(--bg-body);
+            background-color: #FBFBFD;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -187,7 +173,7 @@
             font-weight: 700;
             margin-bottom: 40px;
             line-height: 1.3;
-            color: var(--text-main);
+            color: #1D1D1F;
             letter-spacing: -0.03em;
             background: linear-gradient(135deg, #1D1D1F 0%, #434344 100%);
             -webkit-background-clip: text;
@@ -196,7 +182,7 @@
 
         .hero-section p {
             font-size: 1.1rem;
-            color: var(--text-sub);
+            color: #86868B;
             max-width: 800px;
             margin: 0 auto;
             line-height: 1.9;
@@ -214,9 +200,9 @@
             flex: 1;
             text-align: center;
             padding: 40px 20px;
-            background: var(--bg-section);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
+            background: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
             min-height: 320px;
@@ -227,7 +213,7 @@
 
         .feature-item:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
         .feature-item .number {
@@ -248,12 +234,12 @@
             font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 15px;
-            color: var(--text-main);
+            color: #1D1D1F;
         }
 
         .feature-item p {
             font-size: 0.95rem;
-            color: var(--text-sub);
+            color: #86868B;
             line-height: 1.7;
         }
 
@@ -264,7 +250,7 @@
         }
         
         .feature-separator svg path {
-            fill: var(--text-main);
+            fill: #1D1D1F;
         }
 
         #start {
@@ -370,7 +356,7 @@
             justify-content: center;
             align-items: center;
             padding: 120px 20px;
-            background-color: var(--bg-body);
+            background-color: #FBFBFD;
         }
 
         button#login-btn-center {
@@ -378,8 +364,8 @@
             font-weight: 600;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             padding: 16px 40px;
-            border-radius: var(--radius-pill);
-            background: var(--primary);
+            border-radius: 100px;
+            background: #000000;
             color: white;
             border: none;
             display: flex;
@@ -390,7 +376,7 @@
         }
 
         button#login-btn-center:hover {
-            background: var(--text-main);
+            background: #1D1D1F;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
@@ -421,7 +407,7 @@
         }
 
         #footer .site_title {
-            color: var(--primary);
+            color: #000000;
             font-size: 1.2rem;
         }
 
@@ -438,14 +424,14 @@
         }
 
         #footer li a {
-            color: var(--text-sub);
+            color: v#86868B;
             text-decoration: none;
             font-size: 0.85rem;
             transition: color 0.2s;
         }
 
         #footer li a:hover {
-            color: var(--primary);
+            color: #000000;
         }
 
         @media (max-width: 900px) {

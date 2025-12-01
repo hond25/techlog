@@ -15,25 +15,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     
     <style>
-        :root {
-            --primary: #000000;
-            --accent: #0066CC;
-            --bg-body: #FBFBFD;
-            --bg-section: #FFFFFF;
-            --text-main: #1D1D1F;
-            --text-sub: #86868B;
-            --glass: rgba(255, 255, 255, 0.8);
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
-            --radius-lg: 24px;
-            --radius-pill: 100px;
-        }
-
         body {
             font-family: 'Jost', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
-            background-color: var(--bg-body);
-            color: var(--text-main);
+            background-color: #FBFBFD;
+            color: #1D1D1F;
             -webkit-font-smoothing: antialiased;
             line-height: 1.6;
         }
@@ -44,7 +30,7 @@
             align-items: center;
             height: 70px;
             padding: 0 40px;
-            background-color: var(--glass);
+            background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             position: sticky;
@@ -55,7 +41,7 @@
         }
 
         .site_title {
-            color: var(--text-main);
+            color: #1D1D1F;
             font-family: 'Renner*', sans-serif;
             font-weight: bold;
             font-size: 1.5rem;
@@ -64,18 +50,18 @@
         }
 
         .site_title a {
-            color: var(--text-main);
+            color: #1D1D1F;
             text-decoration: none;
             transition: color 0.3s;
         }
         
         .site_title a:hover {
-            color: var(--accent);
+            color: #0066CC;
         }
 
         .user-info {
             font-size: 0.9em;
-            color: var(--text-sub);
+            color: #86868B;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -83,11 +69,11 @@
         }
         
         .user-info strong {
-            color: var(--text-main);
+            color: #1D1D1F;
         }
 
         #logout-btn {
-             fill: var(--text-main);
+             fill: #1D1D1F;
              cursor: pointer;
              transition: all 0.3s ease;
              padding: 8px;
@@ -97,8 +83,6 @@
 
         #logout-btn:hover {
             fill: #e74c3c;
-            background-color: rgba(231, 76, 60, 0.1);
-            transform: rotate(90deg);
         }
 
         .breadcrumbs {
@@ -117,22 +101,22 @@
         .breadcrumbs li::after {
             content: '>';
             margin: 0 0.6em;
-            color: var(--text-sub);
+            color: #86868B;
         }
         .breadcrumbs li:last-child::after {
             content: '';
         }
         .breadcrumbs a {
             text-decoration: none;
-            color: var(--text-sub);
+            color: #86868B;
             transition: color 0.2s;
         }
         .breadcrumbs a:hover {
             text-decoration: underline;
-            color: var(--accent);
+            color: #0066CC;
         }
         .breadcrumbs li:last-child {
-            color: var(--text-main);
+            color: #1D1D1F;
             font-weight: 600;
         }
 
@@ -153,8 +137,8 @@
         .search-form {
             display: flex;
             width: 100%;
-            box-shadow: var(--shadow-sm);
-            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: 24px;
             overflow: hidden;
             background: white;
             border: 1px solid rgba(0,0,0,0.05);
@@ -177,7 +161,7 @@
             height: 100%;
             font-size: 0.9em;
             font-weight: 600;
-            color: var(--text-main);
+            color: #1D1D1F;
             cursor: pointer;
             outline: none;
             min-width: 100px;
@@ -200,7 +184,7 @@
             margin-left: 16px;
             width: 18px;
             height: 18px;
-            fill: var(--text-sub);
+            fill: #86868B;
             flex-shrink: 0;
         }
         
@@ -210,14 +194,14 @@
             font-size: 1em;
             border: none;
             background: white;
-            color: var(--text-main);
+            color: #1D1D1F;
             outline: none;
         }
         
         .search-form button {
             padding: 0 30px;
             font-size: 1em;
-            background-color: var(--primary);
+            background-color: #000000;
             color: white;
             border: none;
             cursor: pointer;
@@ -226,7 +210,7 @@
             transition: background-color 0.3s;
         }
         .search-form button:hover {
-            background-color: var(--text-main);
+            background-color: #1D1D1F;
         }
 
         .update-button-container {
@@ -264,9 +248,9 @@
             padding: 8px 16px;
             font-size: 0.9em;
             background-color: white;
-            color: var(--text-main);
+            color: #1D1D1F;
             border: 1px solid #E5E5EA;
-            border-radius: var(--radius-pill);
+            border-radius: 100px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-flex;
@@ -275,7 +259,7 @@
             flex-shrink: 0;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         #update-recommendations-btn:hover {
             background-color: #F5F5F7;
@@ -289,7 +273,7 @@
             transform: none;
         }
         #update-recommendations-btn svg {
-            fill: var(--text-main);
+            fill: #1D1D1F;
         }
 
         h2.section-title {
@@ -298,7 +282,7 @@
              padding-bottom: 0.5em;
              display: block;
              font-size: 1.5em;
-             color: var(--text-main);
+             color: #1D1D1F;
              font-weight: 700;
              letter-spacing: -0.01em;
         }
@@ -313,7 +297,7 @@
             background-color: #fff;
             border: 1px solid rgba(0,0,0,0.05);
             border-radius: 16px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -321,7 +305,7 @@
             text-decoration: none;
         }
         .article:hover {
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             transform: translateY(-4px);
         }
         .article-image {
@@ -340,7 +324,7 @@
             font-size: 1.1em;
             line-height: 1.5;
             flex-grow: 1;
-            color: var(--text-main);
+            color: #1D1D1F;
             font-weight: 600;
         }
         .article-footer {
@@ -362,7 +346,7 @@
         .tag-link {
             display: inline-block;
             background-color: #F5F5F7;
-            color: var(--text-sub);
+            color: #86868B;
             padding: 0.3em 0.8em;
             border-radius: 6px;
             font-size: 0.75em;
@@ -376,7 +360,7 @@
         
         .tag-link:hover {
             background-color: #E5E5EA;
-            color: var(--primary);
+            color: #000000;
             border-color: #D1D1D6;
         }
         
@@ -409,7 +393,7 @@
         
         .article-date {
             font-size: 0.8em;
-            color: var(--text-sub);
+            color: #86868B;
             margin-bottom: 0.8em;
             margin-top: 0;
             font-family: 'Inter', sans-serif;
@@ -418,7 +402,7 @@
         .no-articles {
             grid-column: 1 / -1;
             text-align: center;
-            color: var(--text-sub);
+            color: #86868B;
             padding: 4em;
             background-color: #fff;
             border-radius: 16px;
@@ -448,7 +432,6 @@
 
         .recommendation-section .article {
             position: relative;
-            border: 1px solid rgba(255, 215, 0, 0.3);
         }
 
         .recommendation-section .article::before {
