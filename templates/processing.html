@@ -118,20 +118,29 @@
             letter-spacing: -0.02em;
             color: #1D1D1F;
         }
-
-        .scanner-line {
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #0066CC, transparent);
-            margin: 20px 0;
-            animation: scan 3s ease-in-out infinite;
-            border-radius: 2px;
+        .loader {
+            width: 300px;
+            height: 20px;
+            position: relative;
+            margin: 0 auto;
         }
-
-        @keyframes scan {
-            0% { transform: translateX(-50%) scaleX(0.2); opacity: 0; }
-            50% { transform: translateX(0) scaleX(1); opacity: 1; }
-            100% { transform: translateX(50%) scaleX(0.2); opacity: 0; }
+        .loader:before {
+            content: "";
+            position: absolute;
+            border-radius: 50px;
+            box-shadow: 0 0 0 2px inset rgba(0, 102, 204, 0.4);
+            animation: l3 3s infinite alternate;
+        }
+        @keyframes l3 {
+            0% {
+                inset: 0 300px 0 0;
+            }
+            50% {
+                inset: 0 0 0 0;
+            }
+            100% {
+                inset: 0 0 0 300px;
+            }
         }
 
         p {
@@ -157,7 +166,7 @@
     <div class="center-wrapper">
         <div class="container">
             <h1 class="site_title">Tech Log</h1>
-            <div class="scanner-line"></div>
+            <div class="loader"></div>
             <p id="status-msg">解析を開始します...</p>
             <p class="sub-text">AI Filtering System Active</p>
         </div>
