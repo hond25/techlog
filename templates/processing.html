@@ -231,14 +231,11 @@
             return span;
         }
 
-        // --- Animation Sequence ---
-
-        // 1. カオスの生成（単語をばら撒く）
         async function spawnChaos() {
-            statusMsg.textContent = "膨大なログを読み込んでいます...";
+            statusMsg.textContent = "履歴を読み込んでいます...";
             
-            const totalWords = 120; // ノイズ
-            const targetWords = 40; // ターゲット
+            const totalWords = 120;
+            const targetWords = 40;
 
             for (let i = 0; i < totalWords + targetWords; i++) {
                 const isTarget = i >= totalWords;
@@ -248,24 +245,20 @@
                 
                 const el = createWord(text, isTarget ? 'it' : 'noise');
                 
-                // 少しずつ出現させる
                 setTimeout(() => {
                     el.classList.add('visible');
                 }, random(100, 4000));
             }
 
-            // 全てが出現しきるのを待つ
             await wait(5000); 
         }
 
-        // 2. フィルタリング（ノイズ消去＆抽出）
         async function runFilter() {
             statusMsg.textContent = "技術情報を抽出中...";
 
             const noises = document.querySelectorAll('.word-noise');
             const targets = document.querySelectorAll('.word-target');
 
-            // ノイズ消去
             noises.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.remove('visible');
@@ -273,41 +266,35 @@
                 }, index * 20);
             });
 
-            await wait(2000); // ノイズが消えかけるのを待つ
+            await wait(2000);
 
-            // ターゲット強調
-            statusMsg.textContent = "重要な情報を特定しました";
+            statusMsg.textContent = "IT技術情報を特定しました";
             targets.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.add('highlight');
                 }, index * 50);
             });
 
-            await wait(4000); // 結果を見せる時間
+            await wait(4000);
         }
 
-        // 3. リセット（画面をクリア）
         async function resetScene() {
             statusMsg.textContent = "次のデータをスキャン中...";
             
-            // 全ての要素をフェードアウト
             const allWords = document.querySelectorAll('.floating-word');
             allWords.forEach(el => {
                 el.classList.remove('visible', 'highlight', 'fade-out');
                 el.classList.add('reset-fade');
             });
 
-            await wait(2000); // フェードアウト待ち
+            await wait(2000);
 
-            // DOMをクリア
             wordContainer.innerHTML = '';
             await wait(500);
         }
 
-        // --- Main Loop ---
         async function startLoop() {
             while (true) {
-                // 処理が完了していたらループを抜けて遷移
                 if (isProcessingComplete && redirectData) {
                     statusMsg.textContent = "解析完了。リダイレクトします...";
                     await wait(1000);
@@ -320,20 +307,15 @@
                     }
                     break;
                 }
-
-                // アニメーションサイクル実行
-                await spawnChaos(); // 出現 (5s)
+                await spawnChaos();
                 
-                // 処理完了チェック（出現中に終わってたらフィルタリングへ進む前に抜ける等はせず、演出を完遂させる）
                 
-                await runFilter();  // 抽出 (6s)
-                await resetScene(); // 消去 (2.5s)
+                await runFilter();
+                await resetScene();
                 
-                // 合計 1サイクル 約13-14秒
             }
         }
 
-        // --- Firebase Logic ---
         const firebaseConfig = {
             apiKey: "AIzaSyBjHl2FjglHIU-YNqAu07nsR6Yghk_nyEA",
             authDomain: "tech-log-1cbba.firebaseapp.com",
@@ -347,7 +329,6 @@
         const db = firebase.firestore();
         const jobId = '{{ job_id }}';
 
-        // アニメーション開始
         startLoop();
 
         auth.onAuthStateChanged(user => {
@@ -357,7 +338,6 @@
                 const unsubscribe = jobRef.onSnapshot(doc => {
                     const data = doc.data();
                     if (data && data.status === 'complete') {
-                        // 完了フラグを立てる (アニメーションの切れ目で遷移する)
                         isProcessingComplete = true;
                         redirectData = data;
                         unsubscribe();
