@@ -755,7 +755,6 @@
                 updateRecButton.addEventListener('click', async () => {
                     updateRecButton.disabled = true;
                     updateRecButton.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#5f6368"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690l-57 57q-38-20-83-30t-90-10q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h-106v-80h180q0 15-2.5 41t-11.5 59q-63 118-181.5 186T480-160Zm112-192L480-464v-216h80v184l104 104-52 52Z"/></svg>
                         更新中...`;
 
                     try {
@@ -786,7 +785,6 @@
                                 alert('おすすめ対象の記事が3件未満のため、更新されませんでした。');
                                 updateRecButton.disabled = false;
                                 updateRecButton.innerHTML = `
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#5f6368"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690l-57 57q-38-20-83-30t-90-10q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h-106v-80h180q0 15-2.5 41t-11.5 59q-63 118-181.5 186T480-160Zm112-192L480-464v-216h80v184l104 104-52 52Z"/></svg>
                                     おすすめを今すぐ更新`;
                             } else {
                                 throw new Error('サーバーから予期しない応答がありました。');
@@ -799,7 +797,6 @@
                         alert(`エラー: ${error.message}`);
                         updateRecButton.disabled = false;
                         updateRecButton.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#5f6368"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690l-57 57q-38-20-83-30t-90-10q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h-106v-80h180q0 15-2.5 41t-11.5 59q-63 118-181.5 186T480-160Zm112-192L480-464v-216h80v184l104 104-52 52Z"/></svg>
                             おすすめを今すぐ更新`;
                     }
                 });

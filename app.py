@@ -19,11 +19,11 @@ import google.generativeai as genai
 
 import random
 
-load_dotenv() # .envファイルから環境変数を読み込む
+load_dotenv()
 
 try:
-    cred_path = os.environ.get('FIREBASE_ADMINSDK_JSON_PATH') # <- 新しい行
-    cred = credentials.Certificate(cred_path) # <- 新しい行
+    cred_path = os.environ.get('FIREBASE_ADMINSDK_JSON_PATH')
+    cred = credentials.Certificate(cred_path)
     firebase_admin.initialize_app(cred)
     db = firestore.client()
     print("✅ Firebaseとの接続に成功しました。")
@@ -39,7 +39,7 @@ try:
     if not API_KEY or "YOUR_GEMINI_API_KEY" in API_KEY:
         print("⚠️ 警告: Gemini APIキーが.envファイルに設定されていません。")
     genai.configure(api_key=API_KEY)
-    model_name = 'gemini-2.5-flash-lite' #Geminiモデル
+    model_name = 'gemini-2.5-flash-lite'
     for m in genai.list_models():
         if 'generateContent' in m.supported_generation_methods:
             if 'flash' in m.name:
@@ -459,8 +459,7 @@ def delete_article(article_id):
     user_id = g.user_id
     try:
         doc_ref = db.collection('users').document(user_id).collection('articles').document(article_id)
-        
-        # ドキュメントの存在を確認してから削除
+
         if not doc_ref.get().exists:
             return jsonify({"error": "Article not found"}), 404
 
@@ -614,14 +613,11 @@ def generate_recommendations():
     try:
         articles_ref = db.collection('users').document(user_id).collection('articles')
         
-        # SティアとAティアの記事を取得
         query_s = articles_ref.where('reflection.usefulness', '==', 'tier-s').stream()
         query_a = articles_ref.where('reflection.usefulness', '==', 'tier-a').stream()
         
-        # 「後で見る」がオンの記事を取得
         query_read_later = articles_ref.where('readLater', '==', True).stream()
 
-        # 取得した記事を一つにまとめる
         candidate_articles = {}
         for doc in query_s:
             candidate_articles[doc.id] = doc
@@ -629,19 +625,16 @@ def generate_recommendations():
             candidate_articles[doc.id] = doc
         for doc in query_read_later:
             candidate_articles[doc.id] = doc
-        
-        # 辞書からドキュメントのリストに変換
+
         high_value_articles = list(candidate_articles.values())
 
         if len(high_value_articles) < 3:
             print(f"  -> おすすめ対象の記事が3件未満のため、処理をスキップしました。")
             return jsonify({"status": "skipped", "reason": "Not enough high-value articles"}), 200
 
-        # ランダムに3つの記事を選ぶ
         recommended_docs = random.sample(high_value_articles, 3)
         recommended_ids = [doc.id for doc in recommended_docs]
         
-        # おすすめリストをDBに保存
         recommendation_ref = db.collection('users').document(user_id).collection('recommendations').document('weekly')
         recommendation_ref.set({
             'articleIds': recommended_ids,
