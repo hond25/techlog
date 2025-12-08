@@ -85,7 +85,11 @@ def login_required_for_api(f):
     return decorated_function
 
 def is_it_tech(title, url):
-    keywords = ['技術', 'IT', 'プログラミング', 'エンジニア', '開発', 'API', 'AI', '人工知能', 'Python', 'JavaScript', 'プログラム', 'システム', 'ソフトウェア', 'ハードウェア', 'クラウド', 'サーバ', 'データ', 'ネットワーク', 'セキュリティ', 'Web技術', 'IT技術', 'Google', 'Chrome', 'Takeout', 'GitHub', 'コード','API', 'AI', 'ML', '機械学習', 'Deep Learning', 'チュートリアル', '基礎']
+    keywords = [
+        '技術', 'IT', 'プログラミング', 'エンジニア', '開発', 'API', 'AI', '人工知能', 'Python', 'JavaScript', 
+        'プログラム', 'システム', 'ソフトウェア', 'ハードウェア', 'クラウド', 'サーバ', 'データ', 'ネットワーク', 'セキュリティ', 'Web技術', 
+        'IT技術', 'Google', 'Chrome', 'Takeout', 'GitHub', 'コード','API', 'AI', 'ML', '機械学習', 
+        'Deep Learning', 'チュートリアル', '基礎', 'HTML', 'CSS', 'React', 'フロントエンド', 'バックエンド']
     title = title or ""
     url = url or ""
     for keyword in keywords:
