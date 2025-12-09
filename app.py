@@ -361,8 +361,8 @@ def dashboard():
         
         articles = []
         for doc in docs:
-            if doc.id in recommended_ids:
-                continue
+            # if doc.id in recommended_ids:
+            #     continue
 
             article_data = doc.to_dict()
             
