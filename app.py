@@ -22,6 +22,7 @@ import random
 load_dotenv()
 
 try:
+    # firebaseへの接続
     cred_path = os.environ.get('FIREBASE_ADMINSDK_JSON_PATH')
     cred = credentials.Certificate(cred_path)
     firebase_admin.initialize_app(cred)
@@ -35,6 +36,7 @@ app = Flask(__name__)
 CORS(app)
 
 try:
+    # Gemini APIの使用
     API_KEY = os.environ.get('GEMINI_API_KEY')
     if not API_KEY or "YOUR_GEMINI_API_KEY" in API_KEY:
         print("⚠️ 警告: Gemini APIキーが.envファイルに設定されていません。")
@@ -52,6 +54,7 @@ except Exception as e:
     print(f"❌ APIキーの設定中にエラーが発生しました: {e}")
     model = None
 
+# web用のログインしていないユーザーを弾く
 def login_required_for_web(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -68,6 +71,7 @@ def login_required_for_web(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# API用のログインしていないユーザーを弾く
 def login_required_for_api(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -84,6 +88,7 @@ def login_required_for_api(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# 第一のキーワードによるフィルタリング
 def is_it_tech(title, url):
     keywords = [
         '技術', 'IT', 'プログラミング', 'エンジニア', '開発', 'API', 'AI', '人工知能', 'Python', 'JavaScript', 
@@ -98,6 +103,7 @@ def is_it_tech(title, url):
             return True
     return False
 
+# フィルタリングの際に除外したいキーワード
 def is_info_page(title, url):
     exclude_keywords = ['ホーム', 'トップ', 'home', 'drive', 'mail', 'inbox', 'login', 'signin', 'sign in', '検索結果','Google cloud','Google 検索',]
     title = title or ""
@@ -109,6 +115,7 @@ def is_info_page(title, url):
         return False
     return True
 
+# スクレイピング処理
 def scrape_content(url):
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
@@ -131,6 +138,7 @@ def scrape_content(url):
         print(f"スクレイピングエラー ({url}): {e}")
         return None
 
+# 第二のGeminiによるフィルタリング
 def classify_content(text_snippet):
     if not model:
         print("エラー: Geminiモデルが初期化されていません。")
@@ -149,7 +157,7 @@ def classify_content(text_snippet):
         print(f"Geminiでの分類失敗: {e}")
         return False
 
-
+# Geminiによる要約やタグ付の処理
 def process_and_summarize_entry(entry):
     """
     単一の履歴エントリに対して、取得・分類・要約までを一貫して行う関数。
@@ -215,6 +223,7 @@ def process_and_summarize_entry(entry):
         print(f"  -> 🚨 Geminiでの要約中にエラー: {e}")
         return None
 
+# 重複したURLの除外と並列処理、データベースへの保存
 def process_and_summarize_history(history_data, user_id, job_id):
     print(f"\n--- 履歴の処理を開始します (User: {user_id}, Job: {job_id}) ---")
     
