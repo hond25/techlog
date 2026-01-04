@@ -713,7 +713,6 @@
                             fetch(`/article/${articleId}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } })
                             .then(response => {
                                 if (response.ok) {
-                                    alert('記事を削除しました。');
                                     window.location.reload();
                                 } else { throw new Error('削除に失敗しました。'); }
                             })
