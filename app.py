@@ -197,7 +197,7 @@ def process_and_summarize_entry(entry):
             情報元:（ここにURLではなく、Webサイト名やサービス名を記載）
             要約:（サイト内容をIT技術の観点から一言で要約してください。タグ用語を必ず含めて、である調で記述してください。太字などはなしでシンプルなテキストで書いてください。）
             タグ:（重要：必ず下記の「タグリスト」の中から、内容に最も関連する単語を2つだけ選んでください。リストにない単語は絶対に使用しないでください。）
-            タグリスト: サーバー, クライアント, ネットワーク, IPアドレス, DNS, DHCP, HTML, CSS, JavaScript, Java, Python, PHP, Ruby, C#, C++, Linux, Windows, MacOS, OS, 仮想化, クラウド, AWS, Azure, GCP, Docker, フレームワーク, ライブラリ, API, REST, SOAP, JSON, XML, SQL, NoSQL, RDBMS, テーブル, レコード, カラム, インデックス, クエリ, トランザクション, Git, GitHub, 認証, 認可, 暗号化, SSL/TLS, HTTPS, ドメイン, 要件定義, 基本設計, テスト, AI, リリース, 運用, 保守, 障害対応, バックアップ, セキュリティ, プロトコル
+            タグリスト: サーバー, ネットワーク,HTML, CSS, JavaScript, Java, Python, PHP, Ruby, Rust, swift, C言語, C#, C++, TypeScript, Go, サーバーレス, データベース, LLM, Linux, Windows, MacOS, OS,クラウド, AWS, Azure, GCP, Docker, フレームワーク, ライブラリ, API, JSON, SQL, NoSQL, Git, Github, AI, UI/UX, Cloud, ネットワーク, セキュリティ, フロントエンド, バックエンド, Web3
         """
         response = model.generate_content(prompt)
         
