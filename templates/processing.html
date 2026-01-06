@@ -29,7 +29,6 @@
             position: relative;
         }
 
-        /* --- Background Word Cloud Animation --- */
         #word-container {
             position: fixed;
             top: 0;
@@ -44,7 +43,6 @@
         .floating-word {
             position: absolute;
             opacity: 0;
-            /* トランジション設定：出現・消滅・移動を滑らかに */
             transition: opacity 2.0s ease, transform 2.0s ease, filter 2.0s ease, color 1.5s ease;
             white-space: nowrap;
             user-select: none;
@@ -53,28 +51,24 @@
             will-change: opacity, transform, filter;
         }
 
-        /* 登場時 */
         .floating-word.visible {
             opacity: 0.7; 
             transform: scale(1);
             filter: blur(0);
         }
 
-        /* リセット時（全てフェードアウト） */
         .floating-word.reset-fade {
             opacity: 0 !important;
             transform: scale(0.9) !important;
             filter: blur(5px) !important;
         }
 
-        /* ノイズ消滅時 */
         .word-noise.fade-out {
             opacity: 0;
             transform: translateY(50px) scale(0.8) rotate(5deg);
             filter: blur(10px);
         }
 
-        /* ITキーワード強調時 */
         .word-target.highlight {
             opacity: 1 !important;
             color: #0066CC !important;
@@ -86,7 +80,6 @@
             filter: blur(0) !important;
         }
 
-        /* --- Main Card --- */
         .center-wrapper {
             position: relative;
             z-index: 20;
@@ -148,7 +141,7 @@
             color: #1D1D1F;
             margin: 10px 0;
             font-weight: 600;
-            transition: opacity 0.5s; /* テキスト切り替え用 */
+            transition: opacity 0.5s;
         }
 
         p.sub-text {
@@ -173,7 +166,6 @@
     </div>
 
     <script>
-        // --- Settings & Data ---
         const fontFamilies = [
             "'Inter', sans-serif", "'Noto Sans JP', sans-serif", "'Times New Roman', serif",
             "'Courier New', monospace", "'Rock Salt', cursive", "'VT323', monospace",
@@ -205,13 +197,11 @@
         const wordContainer = document.getElementById('word-container');
         const statusMsg = document.getElementById('status-msg');
 
-        let isProcessingComplete = false; // 処理完了フラグ
-        let redirectData = null; // 遷移先データ
+        let isProcessingComplete = false;
+        let redirectData = null;
 
-        // --- Helper Functions ---
         function random(min, max) { return Math.random() * (max - min) + min; }
         
-        // 指定時間待機するPromise関数
         function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
         function createWord(text, type) {
