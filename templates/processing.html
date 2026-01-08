@@ -244,7 +244,7 @@
         }
 
         async function runFilter() {
-            statusMsg.textContent = "技術情報を抽出中...";
+            statusMsg.textContent = "技術情報のみにフィルタリング中";
 
             const noises = document.querySelectorAll('.word-noise');
             const targets = document.querySelectorAll('.word-target');
@@ -258,7 +258,7 @@
 
             await wait(2000);
 
-            statusMsg.textContent = "IT技術情報を特定しました";
+            statusMsg.textContent = "解析完了";
             targets.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.add('highlight');
@@ -286,7 +286,7 @@
         async function startLoop() {
             while (true) {
                 if (isProcessingComplete && redirectData) {
-                    statusMsg.textContent = "解析完了。リダイレクトします...";
+                    statusMsg.textContent = "全ての記事の解析完了。リダイレクトします...";
                     await wait(1000);
                     
                     const newArticleIds = redirectData.newArticleIds;
