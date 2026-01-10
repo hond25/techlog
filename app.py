@@ -19,6 +19,8 @@ import google.generativeai as genai
 
 import random
 
+from datetime import datetime, time, timezone
+
 load_dotenv()
 
 try:
@@ -236,22 +238,28 @@ def process_and_summarize_history(history_data, user_id, job_id):
 
     print(f"履歴から {len(candidate_urls)} 件のユニークなURLを抽出しました。")
     
-    existing_urls_in_db = set()
+    now = datetime.now(timezone.utc)
+    start_of_today = datetime.combine(now.date(), time.min, tzinfo=timezone.utc)
+
+    urls_already_processed_today = set()
     chunk_size = 30
     for i in range(0, len(candidate_urls), chunk_size):
         chunk = candidate_urls[i:i + chunk_size]
         try:
-            query = db.collection('users').document(user_id).collection('articles').where('originalUrl', 'in', chunk)
+            query = db.collection('users').document(user_id).collection('articles') \
+                      .where('originalUrl', 'in', chunk) \
+                      .where('createdAt', '>=', start_of_today)
+            
             docs = query.stream()
             for doc in docs:
-                existing_urls_in_db.add(doc.to_dict().get('originalUrl'))
+                urls_already_processed_today.add(doc.to_dict().get('originalUrl'))
         except Exception as e:
             print(f"URLの存在確認中にエラー: {e}")
 
-    if existing_urls_in_db:
-        print(f"DBに既に存在するURLが {len(existing_urls_in_db)} 件見つかりました。これらはスキップされます。")
+    if urls_already_processed_today:
+        print(f"今日既に保存済みのURLが {len(urls_already_processed_today)} 件見つかりました。これらはスキップされます。")
 
-    entries_to_process = [entry for entry in history_data if entry.get('url') not in existing_urls_in_db]
+    entries_to_process = [entry for entry in history_data if entry.get('url') not in urls_already_processed_today]
     
     print(f"新規処理対象の記事は {len(entries_to_process)} 件です。並列処理を開始します。")
     if not entries_to_process:
