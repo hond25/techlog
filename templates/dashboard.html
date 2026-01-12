@@ -413,6 +413,15 @@
             flex-shrink: 0;
             gap: 8px;
         }
+
+        /* 既存のティアバッジと並ぶバッジ用スタイル */
+        .badge-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 0.8em;
+            flex-wrap: wrap;
+        }
+
         .tier-badge {
             padding: 4px 10px;
             font-size: 0.7em;
@@ -420,15 +429,27 @@
             color: white;
             border-radius: 4px;
             flex-shrink: 0;
-            margin-bottom: 0.8em;
-            align-self: flex-start;
             font-family: 'Inter', sans-serif;
+            align-self: flex-start;
         }
         .tier-s { background-color: #FF2D55; }
         .tier-a { background-color: #FF9500; }
         .tier-b { background-color: #34C759; }
         .tier-c { background-color: #007AFF; }
         .tier-d { background-color: #AF52DE; }
+
+        /* 新設：再読回数バッジ */
+        .repeat-count-badge {
+            padding: 4px 10px;
+            font-size: 0.7em;
+            font-weight: 700;
+            background-color: #93ceff;
+            color: #1D1D1F;
+            border-radius: 4px;
+            flex-shrink: 0;
+            font-family: 'Inter', sans-serif;
+            align-self: flex-start;
+        }
 
         .recommendation-section .article {
             position: relative;
@@ -608,10 +629,17 @@
                             <img class="article-image" src="https://placehold.co/600x400/e9ecef/495057?text=No+Image" alt="No Image Available">
                         {% endif %}
                         <div class="article-content">
-                            {% if article.reflection and article.reflection.usefulness %}
-                                {% set tier_class = article.reflection.usefulness.replace('tier-', '') %}
-                                <div class="tier-badge tier-{{ tier_class }}">{{ tier_class | upper }}</div>
-                            {% endif %}
+                            <div class="badge-container">
+                                {% if article.reflection and article.reflection.usefulness %}
+                                    {% set tier_class = article.reflection.usefulness.replace('tier-', '') %}
+                                    <div class="tier-badge tier-{{ tier_class }}">{{ tier_class | upper }}</div>
+                                {% endif %}
+                                
+                                {% if article.is_repeat %}
+                                    <div class="repeat-count-badge">{{ article.visit_number }}回目の学習</div>
+                                {% endif %}
+                            </div>
+
                             <p class="article-date">{{ article.formatted_date }}</p>
                             <h3>{{ article.generatedTitle }}</h3>
                             <div class="article-footer">
@@ -655,10 +683,17 @@
                             <img class="article-image" src="https://placehold.co/600x400/e9ecef/495057?text=No+Image" alt="No Image Available">
                         {% endif %}
                         <div class="article-content">
-                            {% if article.reflection and article.reflection.usefulness %}
-                                {% set tier_class = article.reflection.usefulness.replace('tier-', '') %}
-                                <div class="tier-badge tier-{{ tier_class }}">{{ tier_class | upper }}</div>
-                            {% endif %}
+                            <div class="badge-container">
+                                {% if article.reflection and article.reflection.usefulness %}
+                                    {% set tier_class = article.reflection.usefulness.replace('tier-', '') %}
+                                    <div class="tier-badge tier-{{ tier_class }}">{{ tier_class | upper }}</div>
+                                {% endif %}
+
+                                {% if article.is_repeat %}
+                                    <div class="repeat-count-badge">{{ article.visit_number }}回目の学習</div>
+                                {% endif %}
+                            </div>
+
                             <p class="article-date">{{ article.formatted_date }}</p>
                             <h3>{{ article.generatedTitle }}</h3>
                             <div class="article-footer">

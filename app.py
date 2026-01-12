@@ -374,21 +374,37 @@ def dashboard():
         else:
             query = articles_ref.order_by('createdAt', direction=firestore.Query.DESCENDING)
         
-        docs = query.stream()
+        docs = list(query.stream())
         
-        articles = []
+        url_counts = {}
         for doc in docs:
-            # if doc.id in recommended_ids:
-            #     continue
+            url = doc.to_dict().get('originalUrl')
+            if url:
+                url_counts[url] = url_counts.get(url, 0) + 1
 
+        articles = []
+        seen_url_counter = {}
+
+        for doc in docs:
             article_data = doc.to_dict()
+            article_id = doc.id
+            url = article_data.get('originalUrl')
+            total_visits = url_counts.get(url, 0)
+            already_seen_count = seen_url_counter.get(url, 0)
             
+            visit_number = total_visits - already_seen_count
+            seen_url_counter[url] = already_seen_count + 1
+
+            article_data['visit_number'] = visit_number
+            article_data['is_repeat'] = total_visits > 1
+            article_data['id'] = article_id
+
             if keyword_query:
                 keyword_lower = keyword_query.lower()
                 is_match = False
 
                 gen_title = article_data.get('generatedTitle', '').lower()
-                orig_title = article_data.get('originalTitle', '').lower()
+                orig_title = article_data.get('originalUrl', '').lower() 
                 summary = article_data.get('summary', '').lower()
                 tags = [t.lower() for t in article_data.get('tags', [])]
 
@@ -401,33 +417,18 @@ def dashboard():
                     reflection_text += r.get('memo', '').lower()
 
                 if search_type == 'tag':
-                    for tag in tags:
-                        if keyword_lower in tag:
-                            is_match = True
-                            break
-                
+                    is_match = any(keyword_lower in tag for tag in tags)
                 elif search_type == 'title':
-                    if (keyword_lower in gen_title) or (keyword_lower in orig_title):
-                        is_match = True
-
+                    is_match = (keyword_lower in gen_title)
                 elif search_type == 'reflection':
-                    if keyword_lower in reflection_text:
-                        is_match = True
-
+                    is_match = (keyword_lower in reflection_text)
                 else:
-                    search_corpus = gen_title + orig_title + summary + reflection_text
-                    if keyword_lower in search_corpus:
-                        is_match = True
-                    else:
-                        for tag in tags:
-                            if keyword_lower in tag:
-                                is_match = True
-                                break
+                    search_corpus = gen_title + summary + reflection_text
+                    is_match = (keyword_lower in search_corpus) or any(keyword_lower in tag for tag in tags)
 
                 if not is_match:
                     continue
 
-            article_data['id'] = doc.id
             if 'createdAt' in article_data and article_data['createdAt']:
                 article_data['formatted_date'] = article_data['createdAt'].strftime('%Y-%m-%d')
             else:
@@ -448,8 +449,7 @@ def dashboard():
         if 'index' in str(e):
             error_message = """
             <h1>データベース設定エラー</h1>
-            <p>データの絞り込み中にエラーが発生しました。これはFirestoreの「複合インデックス」が不足していることが原因の可能性が高いです。</p>
-            <p><strong>解決策:</strong> ターミナルやコンソールのエラーログに表示されているURLにアクセスし、Firebaseの画面の指示に従って必要なインデックスを作成してください。作成には数分かかることがあります。</p>
+            <p>Firestoreの「複合インデックス」が不足している可能性があります。ログを確認してください。</p>
             """
             return error_message, 500
         return "データの取得中にエラーが発生しました。", 500
