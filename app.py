@@ -107,7 +107,13 @@ def is_it_tech(title, url):
 
 # フィルタリングの際に除外したいキーワード
 def is_info_page(title, url):
-    exclude_keywords = ['ホーム', 'トップ', 'home', 'drive', 'mail', 'inbox', 'login', 'signin', 'sign in', '検索結果','Google cloud','Google 検索', 'google_vignette']
+    exclude_keywords = [
+        'ホーム', 'トップ', 'home', 'drive', 'mail', 'inbox', 'login', 'signin', 'sign in', '検索結果',
+        'Google cloud', 'Google 検索', 'google_vignette',
+        'twitter.com', 'x.com', 'facebook.com', 'youtube.com', 'youtu.be', 'instagram.com',
+        'amazon.co.jp', 'amazon.com', 'rakuten.co.jp', 'finance.yahoo.co.jp',
+        'ツイッター', 'フェイスブック', 'ユーチューブ', 'アマゾン', '楽天', 'ヤフーファイナンス'
+    ]
     title = title or ""
     url = url or ""
     for kw in exclude_keywords:
